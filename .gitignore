@@ -1,0 +1,8 @@
+*.sw[op]
+vivado.log
+vivado.jou
+*~
+*#
+dm1/
+**/.Xil
+petalinux/ultra96_trd/

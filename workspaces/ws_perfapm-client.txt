@@ -1,0 +1,43 @@
+File -> New -> Project -> Xilinx -> Library Project
+	Project name : perfapm-client
+	Library Type : Static Library
+	OS Platform : Linux
+	Processor : psu_cortexa53
+	Compiler : 64-bit
+
+perfapm-client -> import -> General -> File System
+	ws_perfapm-client -> perfapm-client
+
+perfapm-client -> C/C++ Build Settings
+	ARM v8 Linux gcc compiler
+		Directories : Workspace -> perfapm-client -> include
+
+File -> New -> Application Project
+	Project name : perfapm-client-test
+	OS Platform : Linux
+	Processor : psu_cortexa53
+	Compiler : 64-bit
+	Next -> Templates : Linux Empty Application
+
+perfapm-client-test -> src -> import -> General -> File System
+	ws_perfapm-client -> perfapm-client-test-> src
+
+perfapm-client-test -> C/C++ Build Settings
+	ARM v8 Linux gcc compiler
+		Directories : Workspace -> perfapm-client -> include
+
+	ARM v8 Linux gcc linker
+		Libraries
+			Libraries(-l) : perfapm-client
+			Library search path(-L) : Workspace -> perfapm-client -> Debug
+
+perfapm-ctl -> src -> lscript.ld
+	psu_r5_ddr_0_MEM_0
+		Base Address : 0x4F000000
+		Size : 0x1000000
+
+	Stack Size : 0x400
+	Heap Size : 0x400
+
+perfapm-ctl -> Clean Project
+perfapm-ctl -> Build Project

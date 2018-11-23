@@ -1,0 +1,26 @@
+File -> New -> Application Project
+    Project name : heartbeat
+    OS Platform : freertos10_xilinx
+    Processor : psu_cortexr5_0
+    Board Support Package :  heartbeat_bsp
+    Next -> Templates : Empty Application
+
+heartbeat_bsp -> Board Support Package Settings
+    Overview -> freertos10_xilinx
+        stdin : axi_uartlite_0
+        stdout : axi_uartlite_0
+
+heartbeat -> src -> import -> General -> File System
+	ws_heartbeat -> heartbeat -> src
+
+heartbeat -> src -> lscript.ld
+    psu_r5_ddr_0_MEM_0
+        Base Address : 0x4E000000
+        Size : 0x1000000
+
+    Stack Size : 0x400
+    Heap Size : 0x400
+
+heartbeat -> Clean Project
+heartbeat -> Build Project
+

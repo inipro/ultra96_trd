@@ -1,0 +1,29 @@
+File -> New -> Application Project
+	Project name : perfapm-server
+	OS Platform : standalone
+	Processor : psu_cortexr5_1
+	Board Support Package : perfapm_bsp
+	Next -> Templates : Empty Application
+
+perfapm-server -> src -> import -> General -> File System
+	ws_perfapm-server -> perfapm-server -> src
+
+perfapm-server -> C/C++ Build Settings
+	ARM R5 gcc compiler
+		Directories : Workspace -> perfapm -> include
+
+	ARM R5 gcc linker
+		Libraries
+			Libraries(-l) : perfapm
+			Library search path(-L) : Workspace -> perfapm -> Debug
+
+perfapm-server -> src -> lscript.ld
+	psu_r5_ddr_0_MEM_0
+		Base Address : 0x4F000000
+		Size : 0x1000000
+
+	Stack Size : 0x2000
+	Heap Size : 0x4000
+
+perfapm-server -> Clean Project
+perfapm-server -> Build Project

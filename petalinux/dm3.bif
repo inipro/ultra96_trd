@@ -1,0 +1,7 @@
+the_ROM_image:
+{
+	[pmufw_image] pmufw.elf
+	[destination_cpu=a53-0, bootloader] zynqmp_fsbl.elf
+	[destination_device=pl] system.bit
+	[destination_cpu=r5-1] perfapm-ctl.elf
+}

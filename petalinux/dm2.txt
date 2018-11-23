@@ -1,0 +1,4 @@
+$ cd ultra96_trd/images/linux
+$ cp ../../../../dm1/dm1.sdk/heartbeat/Debug/heartbeat.elf .
+$ petalinux-package --force --boot --bif=../../../dm2.bif
+$ scp image.ub root@192.168.7.2:/media/card

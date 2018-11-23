@@ -1,0 +1,33 @@
+# /etc/network/interfaces -- configuration file for ifup(8), ifdown(8)
+ 
+# The loopback interface
+auto lo
+iface lo inet loopback
+
+# Wireless interfaces
+auto wlan0
+iface wlan0 inet dhcp
+	pre-up wpa_supplicant -B -D wext -i wlan0 -c /etc/wpa_supplicant.conf	
+	post-down killall -q wpa_supplicant
+	udhcpc_opts -t7 -T3
+	
+
+iface atml0 inet dhcp
+
+# Wired or wireless interfaces
+auto eth0
+iface eth0 inet dhcp
+iface eth1 inet dhcp
+
+# Ethernet/RNDIS gadget (g_ether)
+# ... or on host side, usbnet and random hwaddr
+auto usb0
+iface usb0 inet static
+	pre-up modprobe g_ether 
+	address 192.168.7.2
+	netmask 255.255.255.0
+	network 192.168.7.0
+
+# Bluetooth networking
+iface bnep0 inet dhcp
+

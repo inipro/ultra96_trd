@@ -1,0 +1,65 @@
+File -> New -> Board Support Package
+	Project name : perfapm_bsp
+	CPU : psu_cortexr5_1
+	Board Support Package OS : standalone
+
+Board Support Package Settings
+	Overview
+		[*] libmetal
+		[*] openamp
+		
+	Overview -> standalone
+		stdin : axi_uartlite_0
+		stdout : axi_uartlite_0
+
+	Overview -> drivers -> psu_cortexr5_1
+		extra_compiler_flags : -g -DARMR5 -Wall -Wextra -mfloat-abi=hard -mfpu=vfpv3-d16 -DUNDEFINE_FILE_OPS
+
+File -> New -> Project -> Xilinx -> Library Project
+	Project name : perfapm
+	Library Type : Static Library
+	OS Platform : Standalone
+	Processor : psu_cortexr5
+	Advanced -> Extra Compiler Flags:  -mfloat-abi=hard -mfpu=vfpv3-d16
+
+perfapm -> import -> General -> File System
+	ws_perfapm -> perfapm
+
+perfapm -> C/C++ Build Settings
+	ARM R5 gcc compiler
+		Symbols Defined symbols(-D) : ARMR5
+
+		Directories : Workspace -> perfapm -> include
+
+	Inferred Options
+		Software Platform : Workspace -> perfapm_bsp -> psu_cortexr5_1 -> include
+
+File -> New -> Application Project
+	Project name : perfapm-ctl
+	OS Platform : standalone
+	Processor : psu_cortexr5_1
+	Board Support Package : perfapm_bsp
+	Next -> Templates : Empty Application
+
+perfapm-ctl -> src -> import -> General -> File System
+	ws_perfapm -> perfapm-ctl -> src
+
+perfapm-ctl -> C/C++ Build Settings
+	ARM R5 gcc compiler
+		Directories : Workspace -> perfapm -> include
+
+	ARM R5 gcc linker
+		Libraries
+			Libraries(-l) : perfapm
+			Library search path(-L) : Workspace -> perfapm -> Debug
+
+perfapm-ctl -> src -> lscript.ld
+	psu_r5_ddr_0_MEM_0
+		Base Address : 0x4F000000
+		Size : 0x1000000
+
+	Stack Size : 0x400
+	Heap Size : 0x400
+
+perfapm-ctl -> Clean Project
+perfapm-ctl -> Build Project

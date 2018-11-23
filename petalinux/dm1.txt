@@ -1,0 +1,130 @@
+$ petalinux-create -t project -n ultra96_trd --template zynqMP
+$ cd ultra96_trd
+$ petalinux-config --get-hw-description=../../dm1/dm1.sdk
+
+Subsystem AUTO Hardware Settings -> Serial Settings -> Primary stdio/stdout
+	(X) psu_uart_1
+
+DTG_Settings -> MACHINE_NAME
+	zcu100-revc
+
+DTG_Settings -> Kernel Bootargs -> Auto generated bootargs
+	  earlycon clk_ignore_unused root=/dev/mmcblk0p2 rw rootwait
+
+Image Packaging Configuration -> Root filesystem type
+	(X) SD card
+
+Image Packaging Configuration
+	[ ] Copy final images to tftpboot
+
+u-boot Configuration -> u-boot config target
+	xilinx_zynqmp_zcu100_revC_defconfig
+
+Yocto Settings -> YOCTO_MACHINE_NAME
+	ultra96-zynqmp
+
+Yocto Settings -> TMPDIR Location
+	/media/hokim/data/work/tmp2018.2_zynqmp
+
+Yocto Settings -> Add pre-mirror url
+	file:///opt/petalinux/sstate-rel-v2018.2/downloads
+
+Yocto Settings -> Local sstate feeds settings
+	/opt/petalinux/sstate-rel-v2018.2/aarch64
+
+Yocto Settings -> User Layers
+	/media/hokim/data/work/ultra96_trd/petalinux/meta-inipro
+
+
+$ vi project-spec/meta-user/conf/petalinuxbsp.conf
+EXTRA_IMAGEDEPENDS_remove = "qemu-helper-native virtual/boot-bin"
++
++EXTRA_IMAGE_FEATURES += " package-management"
++
++PACKAGE_FEED_URIS = "http://192.168.7.1:5678"
++
++hostname_pn-base-files = "ultra96"
++
++IMAGE_ROOTFS_EXTRA_SPACE = "102400"
++
++SIGGEN_UNLOCKED_RECIPES += "tzdata"
+
+$ vi project-spec/meta-user/recipes-bsp/u-boot/files/platform-top.h
+#include <configs/platform-auto.h>
++#define CONFIG_USB_HOST_ETHER
++#define CONFIG_USB_ETHER_ASIX
+#define CONFIG_SYS_BOOTM_LEN 0xF000000
+
++/* FIXME Will go away soon */
++#define CONFIG_SYS_I2C_MAX_HOPS         1
++#define CONFIG_SYS_NUM_I2C_BUSES        9
++#define CONFIG_SYS_I2C_BUSES    { \
++                                {0, {I2C_NULL_HOP} }, \
++                                {0, {{I2C_MUX_PCA9548, 0x75, 0} } }, \
++                                {0, {{I2C_MUX_PCA9548, 0x75, 1} } }, \
++                                {0, {{I2C_MUX_PCA9548, 0x75, 2} } }, \
++                                {0, {{I2C_MUX_PCA9548, 0x75, 3} } }, \
++                                {0, {{I2C_MUX_PCA9548, 0x75, 4} } }, \
++                                {0, {{I2C_MUX_PCA9548, 0x75, 5} } }, \
++                                {0, {{I2C_MUX_PCA9548, 0x75, 6} } }, \
++                                {0, {{I2C_MUX_PCA9548, 0x75, 7} } }, \
++                                }
+
+$ petalinux-config -c kernel
+
+$ petalinux-build -c device-tree
+
+$ vi project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
+/include/ "system-conf.dtsi"
+/ {
++	aliases {
++		/delete-property/ serial2;
++	};
+};
++/delete-node/ &axi_uartlite_0;
+
+$ vi project-spec/meta-user/recipes-core/images/petalinux-user-image.bbappend
++IMAGE_INSTALL_append = " nano \
++                        tzdata \
++                        dtc \
++						kmod \
++                        e2fsprogs-resize2fs \
++						i2c-tools \
++						iw \
++                        wpa-supplicant \
++                        wireless-tools \
++                        cmake \
++                        libv4l-dev \
++                        media-ctl-dev \
++                        libsds-staticdev \
++						packagegroup-petalinux-self-hosted \
++						packagegroup-petalinux-openamp \
++						packagegroup-petalinux-v4lutils \
++						packagegroup-petalinux-display-debug \
++						packagegroup-petalinux-openamp \
++						packagegroup-petalinux-x11 \
++                        packagegroup-petalinux-opencv-dev \
++						packagegroup-petalinux-gstreamer-dev \
++						packagegroup-petalinux-qt-dev \
++						packagegroup-petalinux-qt-extended-dev \
++                        "
+
+$ petalinux-build
+
+$ cd images/linux
+$ petalinux-package --force --boot --bif=../../../dm1.bif
+
+$ sudo parted /dev/mmcblk0
+(parted) mkpart primary fat32 0 200MB
+(parted) mkpart primary ext4 200MB 100%
+(parted) quit
+$ sudo mkfs.vfat -n card /dev/mmcblk0p1
+$ sudo mkfs.ext4 -L root /dev/mmcblk0p2
+$ cp BOOT.BIN image.ub /media/hokim/card
+$ sudo tar xvzf rootfs.tar.gz -C /media/hokim/root
+$ sync
+
+$ cd ../..
+$ petalinux-build -c package-index
+
+$ petalinux-package --bsp --force --output ../petalinux-ultra96-2018.2-dm1.bsp -p ./
