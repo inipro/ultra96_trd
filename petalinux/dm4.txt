@@ -93,3 +93,20 @@ $ scp image.ub root@192.168.7.2:/media/card
 # cp perfapm-server.elf /lib/firmware
 # echo perfapm-server.elf > /sys/class/remoteproc/remoteproc0/firmware
 # ./perfapm-client-test.elf
+
+==============================================================================
+
+$ vi project-spec/meta-user/conf/petalinuxbsp.conf
+SIGGEN_UNLOCKED_RECIPES += "tzdata"
++
++KERNEL_MODULE_AUTOLOAD += "rpmsg_user_dev_driver"
+
+$ petalinux-build -c kernel-module-rpmsg-user
+$ petalinux-build -c perfapm-client-test
+$ petalinux-build -c package-index
+$ cd /media/hokim/data/work/tmp2018.2_zynqmp/deploy/rpm
+$ python3 -m http.server 5678
+
+# dnf --refresh install perfapm-client-test
+# dnf --refresh reinstall kernel-module-rpmsg-user-dev-driver
+# perfapm-client-test
