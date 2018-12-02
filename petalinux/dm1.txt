@@ -85,25 +85,24 @@ $ vi project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
 
 $ vi project-spec/meta-user/recipes-core/images/petalinux-user-image.bbappend
 +IMAGE_INSTALL_append = " nano \
-+                        tzdata \
-+                        dtc \
++                       tzdata \
++                       dtc \
 +						kmod \
-+                        e2fsprogs-resize2fs \
++                       e2fsprogs-resize2fs \
 +						i2c-tools \
 +						iw \
-+                        wpa-supplicant \
-+                        wireless-tools \
-+                        cmake \
-+                        libv4l-dev \
-+                        media-ctl-dev \
-+                        libsds-staticdev \
++                       wpa-supplicant \
++                       wireless-tools \
++                       cmake \
++                       libv4l-dev \
++                       media-ctl-dev \
 +						packagegroup-petalinux-self-hosted \
 +						packagegroup-petalinux-openamp \
 +						packagegroup-petalinux-v4lutils \
 +						packagegroup-petalinux-display-debug \
 +						packagegroup-petalinux-openamp \
 +						packagegroup-petalinux-x11 \
-+                        packagegroup-petalinux-opencv-dev \
++                       packagegroup-petalinux-opencv-dev \
 +						packagegroup-petalinux-gstreamer-dev \
 +						packagegroup-petalinux-qt-dev \
 +						packagegroup-petalinux-qt-extended-dev \

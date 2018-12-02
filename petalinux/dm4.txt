@@ -72,7 +72,7 @@ $ vi project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
 /delete-node/ &axi_uartlite_0;
 +/include/ "rpu1.dtsi"
 
-$vi project-spec/meta-user/recipes-bsp/device-tree/device-tree.bbappend
+$ vi project-spec/meta-user/recipes-bsp/device-tree/device-tree.bbappend
 
 -SRC_URI += "file://system-user.dtsi"
 +SRC_URI += "file://system-user.dtsi \
@@ -88,25 +88,16 @@ $ scp ../../../../dm1/dm1.sdk/perfapm-server/Debug/perfapm-server.elf root@192.1
 $ scp ../../../../dm1/dm1.sdk/perfapm-client-test/Debug/perfapm-client-test.elf root@192.168.7.2:.
 $ scp image.ub root@192.168.7.2:/media/card
 
-
-# modprobe rpmsg_user_dev_driver
-# cp perfapm-server.elf /lib/firmware
-# echo perfapm-server.elf > /sys/class/remoteproc/remoteproc0/firmware
-# ./perfapm-client-test.elf
-
-==============================================================================
-
-$ vi project-spec/meta-user/conf/petalinuxbsp.conf
-SIGGEN_UNLOCKED_RECIPES += "tzdata"
-+
-+KERNEL_MODULE_AUTOLOAD += "rpmsg_user_dev_driver"
-
-$ petalinux-build -c kernel-module-rpmsg-user
-$ petalinux-build -c perfapm-client-test
-$ petalinux-build -c package-index
+$ petalinux-build -c trd-files
 $ cd /media/hokim/data/work/tmp2018.2_zynqmp/deploy/rpm
 $ python3 -m http.server 5678
 
-# dnf --refresh install perfapm-client-test
-# dnf --refresh reinstall kernel-module-rpmsg-user-dev-driver
+# dnf --refresh install trd-files
+# ./perfapm-client-test.elf
+
+=============================================================================
+
+$ petalinux-build -c perfapm-client-test
+$ petalinux-build -c package-index
+# dnf --refresh install trd-files perfapm-client-test
 # perfapm-client-test

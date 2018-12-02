@@ -1,0 +1,10 @@
+prefix=/usr
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir=${exec_prefix}/lib
+
+Name: sds_lib 
+Description: sds library
+Version: 1.0.0
+Cflags: -I${includedir}
+Libs: -L${libdir} -lsds_lib

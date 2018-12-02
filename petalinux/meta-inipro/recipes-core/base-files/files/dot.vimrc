@@ -3,7 +3,6 @@ set nobackup
 set noundofile
 set shiftwidth=4
 set tabstop=4
-set cindent
 set smartindent
 set nu
 set formatoptions=1

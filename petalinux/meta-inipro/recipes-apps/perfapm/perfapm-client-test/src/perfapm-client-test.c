@@ -58,16 +58,6 @@ int main(int argc, char *argv[])
 	int Status = EXIT_SUCCESS;
 	int i;
 	Perf_OA_Payload *openamp_payload = NULL;
-	FILE *sysfs_fptr;
-
-	sysfs_fptr = fopen("/sys/class/remoteproc/remoteproc0/firmware", "w");
-	if (sysfs_fptr == NULL)
-	{
-		perror("Failed to open remoteproc firmware file");
-		return EXIT_FAIL;
-	}
-	fputs("perfapm-server.elf", sysfs_fptr);
-	fclose(sysfs_fptr);
 
 	Status = perfoacl_init_all(PERF_LINUX_OS, PERF_SAMPLE_INTERVAL_COUNTER);
 	if (Status != EXIT_SUCCESS) {

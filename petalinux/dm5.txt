@@ -7,24 +7,11 @@ Device Drivers -> Multimedia support
 Device Drivers -> Multimedia support -> Media test drivers
 <*> Virtual Video Test Driver ===> VIDEO_VIVID
 
-Device Drivers -> Staging drivers
-<*> Xilinx APF Accelerator driver ===> XILINX_APF=y
-
-Device Drivers -> Staging drivers -> Xilinx APF Accelerator driver
-[*] Xilinx APF DMA engines support ===> XILINX_DMA_APF=y
-
-$ vi project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
-/include/ "system-conf.dtsi"
-/ {
-   aliases {
-       /delete-property/ serial2;
-   };
-+   xlnk {
-+		compatible = "xlnx,xlnk-1.0";
-+   };
-};
-/delete-node/ &axi_uartlite_0;
+$ petalinux-build -c libsds
 
 $ petalinux-build -c virtual/boot-bin
+$ petalinux-build -s
+$ petalinux-package --sysroot -d ../sdk
+
 $ cd images/linux
 $ scp image.ub root@192.168.7.2:/media/card
