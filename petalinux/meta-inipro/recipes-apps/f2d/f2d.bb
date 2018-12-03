@@ -14,4 +14,4 @@ inherit cmake
 
 DEPENDS="video-lib opencv"
 
-EXTRA_OECMAKE += "-DSW_ONLY=on"
+EXTRA_OECMAKE += "-DSW_ONLY=on -DGST_MODE=on"

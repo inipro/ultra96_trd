@@ -35,9 +35,13 @@ pkg_check_modules(DRM libdrm)
 find_path (V4L2SUBDEV_INCLUDE_DIRS mediactl/v4l2subdev.h)
 find_path (MEDIACTL_INCLUDE_DIRS mediactl/mediactl.h)
 find_package (Threads REQUIRED)
+if(WITH_SDSOC)
+pkg_check_modules(SDS sds_lib)
+endif()
 if(GST_MODE)
-pkg_check_modules(GSTREMER gstreamer-1.0)
-pkg_check_modules(gst gst_lib)
+pkg_check_modules(GSTREAMER gstreamer-1.0)
+pkg_check_modules(GSTREAMER_VIDEO gstreamer-video-1.0)
+pkg_check_modules(gst gst)
 endif()
 
 target_compile_definitions (${PROJECT_NAME}
@@ -49,9 +53,6 @@ target_compile_definitions (${PROJECT_NAME}
 )
 
 
-#PRIVATE ${LIBDRM_INCLUDE_DIRS}
-#PRIVATE ${MEDIACTL_INCLUDE_DIRS}
-#PRIVATE ${V4L2SUBDEV_INCLUDE_DIRS}
 target_include_directories (${PROJECT_NAME}
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
 	PRIVATE ${VIDEO_INCLUDE_DIRS}
@@ -73,11 +74,16 @@ target_link_libraries (${PROJECT_NAME}
 	v4l2subdev
 	pthread
 )
-
+if(WITH_SDSOC)
+target_link_libraries(${PROJECT_NAME} 
+	${SDS_LIBRARIES}
+)
+endif()
 if (GST_MODE)
 target_link_libraries(${PROJECT_NAME} 
-	${GSTREAMER_LIBRARIES}
 	${gst_LIBRARIES}
+	${GSTREAMER_LIBRARIES}
+	${GSTREAMER_VIDEO_LIBRARIES}
 )
 endif()
 

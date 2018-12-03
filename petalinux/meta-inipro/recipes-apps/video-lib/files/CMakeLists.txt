@@ -36,11 +36,11 @@ find_path (V4L2SUBDEV_INCLUDE_DIRS mediactl/v4l2subdev.h)
 find_path (MEDIACTL_INCLUDE_DIRS mediactl/mediactl.h)
 find_package (Threads REQUIRED)
 if(WITH_SDSOC) 
-pkg_check_modules(SDSLIB sds_lib)
+pkg_check_modules(SDS sds_lib)
 endif()
 if(GST_MODE)
-pkg_check_modules(GSTREMER gstreamer-1.0)
-pkg_check_modules(gst gst_lib)
+pkg_check_modules(GSTREAMER gstreamer-1.0)
+pkg_check_modules(gst gst)
 endif()
 
 target_compile_definitions (${PROJECT_NAME}
@@ -59,7 +59,7 @@ target_include_directories (${PROJECT_NAME}
 	PRIVATE ${MEDIACTL_INCLUDE_DIRS}
 	PRIVATE ${V4L2SUBDEV_INCLUDE_DIRS}
 	PUBLIC ${GLIB_INCLUDE_DIRS}
-	PRIVATE $<$<BOOL:${WITH_SDSOC}>:${SDSLIB_INCLUDE_DIRS}>
+	PRIVATE $<$<BOOL:${WITH_SDSOC}>:${SDS_INCLUDE_DIRS}>
 	PRIVATE $<$<BOOL:${GST_MODE}>:${gst_INCLUDE_DIRS}>
 	PUBLIC $<$<BOOL:${GST_MODE}>:${GSTREAMER_INCLUDE_DIRS}>
 )

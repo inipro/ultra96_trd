@@ -5,11 +5,17 @@ project(f2d.elf)
 
 find_package(PkgConfig)
 pkg_check_modules(VIDEO video)
-pkg_check_modules(SDSLIB sds_lib)
+pkg_check_modules(SDS sds_lib)
 pkg_check_modules(GLIB glib-2.0)
 pkg_check_modules(DRM libdrm)
 
 find_package(OpenCV REQUIRED)
+
+if(GST_MODE)
+pkg_check_modules(GSTREAMER gstreamer-1.0)
+pkg_check_modules(GSTREAMER_VIDEO gstreamer-video-1.0)
+pkg_check_modules(gst gst)
+endif()
 
 set(SRCS main.c top/filter2d.c top/filter2d_cv.cpp)
 
@@ -36,13 +42,21 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 if (SW_ONLY)
-	target_link_libraries(${PROJECT_NAME} ${SDSLIB_LIBRARIES}) 
+	target_link_libraries(${PROJECT_NAME} ${SDS_LIBRARIES}) 
 else ()
 	add_definitions(-DWITH_SDSOC)
 	add_library(f2d SHARED IMPORTED)
 	set_target_properties(f2d PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/libf2d.so)
 	target_link_libraries(${PROJECT_NAME} f2d)
 	install(TARGETS f2d LIBRARY DESTINATION lib)
+endif()
+
+if (GST_MODE)
+target_link_libraries(${PROJECT_NAME} 
+    ${gst_LIBRARIES}
+    ${GSTREAMER_LIBRARIES}
+    ${GSTREAMER_VIDEO_LIBRARIES}
+)
 endif()
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)

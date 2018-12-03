@@ -1,0 +1,10 @@
+prefix=/usr
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir=${exec_prefix}/lib
+
+Name: gst
+Description: video gstreamer library
+Version: 1.0.0
+Cflags: -I${includedir}/vgst
+Libs: -L${libdir} -lgst
