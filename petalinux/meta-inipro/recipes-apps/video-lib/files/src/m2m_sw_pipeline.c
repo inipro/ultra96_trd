@@ -336,7 +336,7 @@ static void m2m_sw_pipeline_uninit(void *ptr)
 	}
 
 	if (v_pipe->enable_log_event) {
-		//levents_counter_stop(v_pipe->events[DISPLAY_EVENT]);
+		levents_counter_stop(v_pipe->events[DISPLAY_EVENT]);
 		levents_counter_stop(v_pipe->events[CAPTURE_EVENT]);
 		levents_counter_stop(v_pipe->events[PROCESS_IN_EVENT]);
 		levents_counter_stop(v_pipe->events[PROCESS_OUT_EVENT]);
@@ -363,7 +363,7 @@ void *m2m_sw_process_event_loop(void *ptr)
 	/* push cleanup handler */
 	pthread_cleanup_push(m2m_sw_pipeline_uninit, ptr);
 	if (v_pipe->enable_log_event) {
-		//levents_counter_start(v_pipe->events[DISPLAY_EVENT]);
+		levents_counter_start(v_pipe->events[DISPLAY_EVENT]);
 		levents_counter_start(v_pipe->events[CAPTURE_EVENT]);
 		levents_counter_start(v_pipe->events[PROCESS_IN_EVENT]);
 		levents_counter_start(v_pipe->events[PROCESS_OUT_EVENT]);

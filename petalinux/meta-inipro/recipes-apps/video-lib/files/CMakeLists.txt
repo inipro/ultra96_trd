@@ -29,7 +29,7 @@ add_library (${PROJECT_NAME} STATIC
 
 find_package(PkgConfig)
 pkg_check_modules(GLIB glib-2.0)
-pkg_check_modules(LIBDRM libdrm)
+pkg_check_modules(DRM libdrm)
 
 # Dependencies
 find_path (V4L2SUBDEV_INCLUDE_DIRS mediactl/v4l2subdev.h)
@@ -45,7 +45,6 @@ endif()
 
 target_compile_definitions (${PROJECT_NAME}
 	PUBLIC $<$<BOOL:${WITH_SDSOC}>:WITH_SDSOC>
-	PRIVATE $<$<BOOL:${VSRC_INIT}>:VSRC_INIT>
 	PRIVATE $<$<BOOL:${DEBUG_MODE}>:DEBUG_MODE>
 	PRIVATE $<$<BOOL:${ENABLE_VCAP_UVC}>:ENABLE_VCAP_UVC>
 	PRIVATE $<$<BOOL:${ENABLE_VCAP_VIVID}>:ENABLE_VCAP_VIVID>
@@ -56,7 +55,7 @@ target_compile_definitions (${PROJECT_NAME}
 target_include_directories (${PROJECT_NAME}
 	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 	PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include
-	PRIVATE ${LIBDRM_INCLUDE_DIRS}
+	PRIVATE ${DRM_INCLUDE_DIRS}
 	PRIVATE ${MEDIACTL_INCLUDE_DIRS}
 	PRIVATE ${V4L2SUBDEV_INCLUDE_DIRS}
 	PUBLIC ${GLIB_INCLUDE_DIRS}

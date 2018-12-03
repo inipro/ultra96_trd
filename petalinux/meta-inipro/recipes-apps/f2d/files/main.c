@@ -470,6 +470,12 @@ int main(int argc, char *argv[])
 		vlib_drm_set_layer0_state(0); // Disable Layer0 (used for graphics only)
 	}
 
+	ret = vlib_video_src_init(&cfg);
+	if (ret) {
+		fprintf(stderr, "ERROR: vlib_video_src failed: %s\n", vlib_errstr);
+		return ret;
+	}
+
 	/* Print application status */
 	printf("Video Control application:\n");
 	printf("------------------------\n");

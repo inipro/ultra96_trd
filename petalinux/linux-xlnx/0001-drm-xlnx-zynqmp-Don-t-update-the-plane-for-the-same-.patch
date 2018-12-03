@@ -1,0 +1,42 @@
+From 37abc2e6a26d1b47a9aa6882432da0d3c29d064b Mon Sep 17 00:00:00 2001
+From: Hyun Kwon <hyun.kwon@xilinx.com>
+Date: Wed, 9 May 2018 15:49:39 -0700
+Subject: [LINUX PATCH 1/1] drm: xlnx: zynqmp: Don't update the plane for the
+ same fb
+
+The async plane update triggers the other plane's atomic_async_update
+if the plane is enabled for the same crtc, even though there's no change
+for that plane. Depending on the timing of requests, this can
+result in 2 back-to-back descriptors for a single frame that will be
+queued in the dma descriptor list and consumed sequentially by dmaengine.
+In this case, the frame will be displayed twice, and it will end up
+displaying the backbuffer.
+
+This patch fixes it by skipping plane update for the same fb. There's
+no reason to create and schedule another descriptor for the same fb.
+
+Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+---
+CR-1002003: http://jira.xilinx.com/browse/CR-1002003
+---
+---
+ drivers/gpu/drm/xlnx/zynqmp_disp.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+index 807fede..57d865c 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
++++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+@@ -2655,6 +2655,9 @@ zynqmp_disp_plane_atomic_async_update(struct drm_plane *plane,
+ 	struct drm_plane_state *old_state =
+ 		drm_atomic_get_old_plane_state(new_state->state, plane);
+ 
++	if (plane->state->fb == new_state->fb)
++		return;
++
+ 	 /* Update the current state with new configurations */
+ 	drm_atomic_set_fb_for_plane(plane->state, new_state->fb);
+ 	plane->state->crtc = new_state->crtc;
+-- 
+2.7.4
+

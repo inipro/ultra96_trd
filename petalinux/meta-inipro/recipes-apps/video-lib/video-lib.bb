@@ -14,7 +14,6 @@ inherit cmake
 
 DEPENDS="glib-2.0 libdrm v4l-utils gstreamer1.0 libsds"
 
-EXTRA_OECMAKE += "-DVSRC_INIT=on"
 #EXTRA_OECMAKE += "-DWITH_SDSOC=on -DGST_MODE=on"
 
 do_install_append () {

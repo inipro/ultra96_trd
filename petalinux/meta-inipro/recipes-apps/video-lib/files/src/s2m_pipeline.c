@@ -242,7 +242,7 @@ static void s2m_pipeline_uninit(void *ptr)
 	}
 
 	if (v_pipe->enable_log_event) {
-		//levents_counter_stop(v_pipe->events[DISPLAY_EVENT]);
+		levents_counter_stop(v_pipe->events[DISPLAY_EVENT]);
 		levents_counter_stop(v_pipe->events[CAPTURE_EVENT]);
 	}
 
@@ -268,7 +268,7 @@ void *s2m_process_event_loop(void *ptr)
 	pthread_cleanup_push(s2m_pipeline_uninit, sh);
 
 	if (v_pipe->enable_log_event) {
-		//levents_counter_start(v_pipe->events[DISPLAY_EVENT]);
+		levents_counter_start(v_pipe->events[DISPLAY_EVENT]);
 		levents_counter_start(v_pipe->events[CAPTURE_EVENT]);
 	}
 

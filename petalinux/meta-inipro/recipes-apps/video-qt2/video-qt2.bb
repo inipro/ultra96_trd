@@ -1,0 +1,18 @@
+SUMMARY = "Qt Gui for Video"
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
+
+SRC_URI = " \
+		  file://CMakeLists.txt \
+		  file://src/ \
+		  file://qml/ \
+		  file://include/ \
+		  file://images/ \
+		  file://font/ \
+		  file://resourcefile.qrc \
+		  "
+S = "${WORKDIR}"
+
+DEPENDS += "video-lib qtcharts"
+
+inherit cmake_qt5

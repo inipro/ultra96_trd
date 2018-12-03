@@ -1,0 +1,25 @@
+From e769a781f489e7d42a05f6b526d68bed2677346d Mon Sep 17 00:00:00 2001
+From: Hyun Kwon <hyun.kwon@xilinx.com>
+Date: Wed, 14 Mar 2018 10:25:16 -0700
+Subject: [PATCH 1/1] drm: xilinx: dp_sub: Reset the coefficients in set format
+
+Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+---
+ drivers/gpu/drm/xilinx/xilinx_drm_dp_sub.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpu/drm/xilinx/xilinx_drm_dp_sub.c b/drivers/gpu/drm/xilinx/xilinx_drm_dp_sub.c
+index e3a68b3..bda7780 100644
+--- a/drivers/gpu/drm/xilinx/xilinx_drm_dp_sub.c
++++ b/drivers/gpu/drm/xilinx/xilinx_drm_dp_sub.c
+@@ -1669,6 +1669,7 @@ int xilinx_drm_dp_sub_layer_set_fmt(struct xilinx_drm_dp_sub *dp_sub,
+ 	fmts |= fmt->dp_sub_fmt;
+ 	xilinx_drm_dp_sub_av_buf_set_fmt(&dp_sub->av_buf, fmts);
+ 	xilinx_drm_dp_sub_av_buf_init_sf(&dp_sub->av_buf, vid_fmt, gfx_fmt);
++	xilinx_drm_dp_sub_blend_layer_enable(&dp_sub->blend, layer);
+ 
+ 	layer->fmt = fmt;
+ 
+-- 
+2.7.4
+

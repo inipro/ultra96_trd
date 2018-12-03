@@ -321,14 +321,6 @@ int vlib_init(struct vlib_config_data *cfg)
 		cfg->buffer_cnt = BUFFER_CNT_MIN;
 	}
 
-
-#ifdef VSRC_INIT
-	ret = vlib_video_src_init(cfg);
-	if (ret)
-		return ret;
-#endif
-
-
 	/* Allocate video_setup struct and zero out memory */
 	video_setup = calloc (1, sizeof(*video_setup));
 	video_setup->app_state = MODE_INIT;
