@@ -14,8 +14,8 @@ inherit cmake
 
 DEPENDS="glib-2.0 libdrm v4l-utils gst-lib libsds"
 
-EXTRA_OECMAKE += "-DGST_MODE=on"
 #EXTRA_OECMAKE += "-DWITH_SDSOC=on -DGST_MODE=on"
+EXTRA_OECMAKE += "-DGST_MODE=on"
 
 do_install_append () {
 	install -d ${D}${libdir}/pkgconfig

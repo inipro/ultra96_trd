@@ -15,6 +15,8 @@ S = "${WORKDIR}"
 
 DEPENDS += "video-lib qtcharts"
 
+#EXTRA_OECMAKE += "-DWITH_SDSOC=on -DGST_MODE=on"
 EXTRA_OECMAKE += "-DGST_MODE=on"
+
 
 inherit cmake_qt5
