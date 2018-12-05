@@ -51,8 +51,6 @@ EXTRA_IMAGEDEPENDS_remove = "qemu-helper-native virtual/boot-bin"
 
 $ vi project-spec/meta-user/recipes-bsp/u-boot/files/platform-top.h
 #include <configs/platform-auto.h>
-+#define CONFIG_USB_HOST_ETHER
-+#define CONFIG_USB_ETHER_ASIX
 #define CONFIG_SYS_BOOTM_LEN 0xF000000
 
 +/* FIXME Will go away soon */
