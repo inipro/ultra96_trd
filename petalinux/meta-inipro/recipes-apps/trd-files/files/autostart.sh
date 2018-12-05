@@ -27,7 +27,7 @@ cp -f /media/card/lib/* /usr/lib &> /dev/null
 cp -f /media/card/gstreamer-1.0/* /usr/lib/gstreamer-1.0 &> /dev/null
 
 # Wake up HDMI monitor
-modetest -D b00c0000.v_mix > /dev/null 2>&1 &
+#modetest -D b00c0000.v_mix > /dev/null 2>&1 &
 sleep 1
 
 # Auto-start base TRD application if present

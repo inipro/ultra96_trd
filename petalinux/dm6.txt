@@ -1,0 +1,6 @@
+$ cd ultra96_trd
+$ petalinux-config --get-hw-description=../../dm6/dm6.sdk
+
+$ petalinux-build -c virtual/boot-bin
+$ cd images/linux
+$ petalinux-package --force --boot --bif=../../../dm6.bif

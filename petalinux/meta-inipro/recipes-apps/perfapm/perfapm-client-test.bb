@@ -9,7 +9,7 @@ SRC_URI = "file://Makefile \
 S = "${WORKDIR}"
 
 DEPENDS = "perfapm-client"
-RDEPENDS_${PN} = "kernel-module-rpmsg-user linux-firmware-perfapm-server"
+RDEPENDS_${PN} = "kernel-module-rpmsg-user"
 
 do_install () {
 	install -d ${D}${bindir}

@@ -84,7 +84,7 @@ $ petalinux-build -c package-index
 
 $ cd images/linux
 $ petalinux-package --force --boot --bif=../../../dm4.bif
-$ scp ../../../../dm1/dm1.sdk/perfapm-server/Debug/perfapm-server.elf root@192.168.7.2:.
+$ scp ../../../../dm1/dm1.sdk/perfapm-server/Debug/perfapm-server.elf root@192.168.7.2:/media/card
 $ scp ../../../../dm1/dm1.sdk/perfapm-client-test/Debug/perfapm-client-test.elf root@192.168.7.2:.
 $ scp image.ub root@192.168.7.2:/media/card
 
