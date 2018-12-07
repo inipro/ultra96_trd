@@ -7,16 +7,6 @@ Device Drivers -> Multimedia support
 Device Drivers -> Multimedia support -> Media test drivers
 <*> Virtual Video Test Driver ===> VIDEO_VIVID
 
-$ cp ../linux-xlnx/0001-drm-*.patch project-spec/meta-user/recipes-kernel/linux/linux-xlnx
-$ vi project-spec/meta-user/recipes-kernel/linux/linux-xlnx_%.bbappend
-SRC_URI += "file://user_2018-11-23-00-29-00.cfg \
-            file://user_2018-12-02-20-57-00.cfg \
--		   "
-           file://0001-drm-xilinx-dp_sub-Reset-the-coefficients-in-set-form.patch \
-           file://0001-drm-xlnx-zynqmp-Don-t-update-the-plane-for-the-same-.patch \
-           "
-
-
 $ petalinux-build -c virtual/boot-bin
 $ petalinux-build -s
 $ petalinux-package --sysroot -d ../sdk

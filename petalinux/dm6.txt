@@ -1,6 +1,97 @@
 $ cd ultra96_trd
 $ petalinux-config --get-hw-description=../../dm6/dm6.sdk
+$ vi project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
+/include/ "system-conf.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/media/xilinx-vip.h>
+/ {
+   aliases {
+       /delete-property/ serial2;
+   };
+};
+/delete-node/ &axi_uartlite_0;
+/include/ "rpu1.dtsi"
++
++/*
++&axi_intc_0 {
++    xlnx,kind-of-intr = <0x1>;
++};
++*/
++
++&tpg_input_0_v_tc_0 {
++    clocks = <&tpg_pixel_clk>;
++    xlnx,generator;
++};
++
++&tpg_input_0_v_tpg_0 {
++    clocks = <&axi_stream_clk>;
++    xlnx,vtc = <&tpg_input_0_v_tc_0>;
++    reset-gpios = <&gpio 78 GPIO_ACTIVE_LOW>;
++
++    ports {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        port@0 {
++            reg = <0>;
++            xlnx,video-format = <XVIP_VF_YUV_422>;
++            xlnx,video-width = <8>;
++
++            tpg_out: endpoint {
++                remote-endpoint = <&vcap_tpg_in>;
++            };
++        };
++    };
++};
++
++&tpg_input_0_v_frmbuf_wr_0 {
++    compatible = "xlnx,axi-frmbuf-wr-v2";
++    #dma-cells = <1>;
++    xlnx,vid-formats = "yuyv", "uyvy", "y8";
++    reset-gpios = <&gpio 79 GPIO_ACTIVE_LOW>;
++    xlnx,dma-addr-width = <32>;
++};
++
++&fclk0 {
++    status = "okay";
++};
++
++&amba {
++    tpg_pixel_clk: tpg_pixel_clk {
++        compatible = "fixed-clock";
++        #clock-cells = <0>;
++        clock-frequency = <300000000>;
++    };
++
++    axi_stream_clk: axi_stream_clk {
++        compatible = "fixed-factor-clock";
++        clocks = <&clk 71>;
++        #clock-cells = <0>;
++        clock-div = <1>;
++        clock-mult = <6>;
++    };
++
++    vcap_tpg {
++        compatible = "xlnx,video";
++        dmas = <&tpg_input_0_v_frmbuf_wr_0 0>;
++        dma-names = "port0";
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            port@0 {
++                reg = <0>;
++                direction = "input";
++                vcap_tpg_in: endpoint {
++                    remote-endpoint = <&tpg_out>;
++                };
++            };
++        };
++    };
++};
 
 $ petalinux-build -c virtual/boot-bin
 $ cd images/linux
 $ petalinux-package --force --boot --bif=../../../dm6.bif
+

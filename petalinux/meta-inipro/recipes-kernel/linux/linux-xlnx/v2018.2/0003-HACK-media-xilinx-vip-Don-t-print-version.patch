@@ -1,0 +1,38 @@
+From 5df6f956368fcbdcdfd4db41e978239c48c5a224 Mon Sep 17 00:00:00 2001
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Date: Mon, 10 Apr 2017 11:35:31 -0700
+Subject: [PATCH 3/3] [HACK] media: xilinx: vip: Don't print version
+
+Due to clocking issues, during driver probe register access may cause
+the kernel to crash. The only register access vip does during probe is
+to obtain and print the IP version. Removing that register access
+prevents the kernel crash.
+
+Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+---
+ drivers/media/platform/xilinx/xilinx-vip.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/media/platform/xilinx/xilinx-vip.h b/drivers/media/platform/xilinx/xilinx-vip.h
+index 42fee20..7c9ea28 100644
+--- a/drivers/media/platform/xilinx/xilinx-vip.h
++++ b/drivers/media/platform/xilinx/xilinx-vip.h
+@@ -222,6 +222,7 @@ static inline void xvip_disable_reg_update(struct xvip_device *xvip)
+ 
+ static inline void xvip_print_version(struct xvip_device *xvip)
+ {
++#if 0
+ 	u32 version;
+ 
+ 	version = xvip_read(xvip, XVIP_CTRL_VERSION);
+@@ -233,6 +234,7 @@ static inline void xvip_print_version(struct xvip_device *xvip)
+ 		  XVIP_CTRL_VERSION_MINOR_SHIFT),
+ 		 ((version & XVIP_CTRL_VERSION_REVISION_MASK) >>
+ 		  XVIP_CTRL_VERSION_REVISION_SHIFT));
++#endif
+ }
+ 
+ #endif /* __XILINX_VIP_H__ */
+-- 
+2.7.4
+

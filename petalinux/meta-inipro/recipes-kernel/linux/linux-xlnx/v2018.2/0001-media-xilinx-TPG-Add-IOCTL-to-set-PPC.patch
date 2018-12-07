@@ -1,0 +1,103 @@
+From 498b052c207a91fa8b127ac3fc32c7701aa14c6c Mon Sep 17 00:00:00 2001
+From: Daniel Steger <daniel.steger@xilinx.com>
+Date: Fri, 11 May 2018 18:01:59 -0700
+Subject: [PATCH] media: xilinx: TPG: Add IOCTL to set PPC
+
+Provide an interface to set the pixels per clock to support running off
+of pixel clocks that provide rates scaled down by PPC.
+---
+ drivers/media/platform/xilinx/xilinx-tpg.c | 29 ++++++++++++++++++++++-------
+ include/uapi/linux/xilinx-v4l2-controls.h  |  2 ++
+ 2 files changed, 24 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/media/platform/xilinx/xilinx-tpg.c b/drivers/media/platform/xilinx/xilinx-tpg.c
+index a57a5c6..6813ec5 100644
+--- a/drivers/media/platform/xilinx/xilinx-tpg.c
++++ b/drivers/media/platform/xilinx/xilinx-tpg.c
+@@ -115,6 +115,7 @@
+  * @hblank: horizontal blanking control
+  * @vblank: vertical blanking control
+  * @pattern: test pattern control
++ * @ppc: Pixels per clock control
+  * @streaming: is the video stream active
+  * @is_hls: whether the IP core is HLS based
+  * @vtc: video timing controller
+@@ -137,6 +138,7 @@ struct xtpg_device {
+ 	struct v4l2_ctrl *hblank;
+ 	struct v4l2_ctrl *vblank;
+ 	struct v4l2_ctrl *pattern;
++	struct v4l2_ctrl *ppc;
+ 	bool streaming;
+ 	bool is_hls;
+ 
+@@ -168,20 +170,20 @@ static u32 xtpg_get_bayer_phase(unsigned int code)
+ 
+ static void xtpg_config_vtc(struct xtpg_device *xtpg, int width, int height)
+ {
+-
++	s32 ppc = v4l2_ctrl_g_ctrl(xtpg->ppc);
+ 	struct xvtc_config config = {
+-		.hblank_start = width,
+-		.hsync_start = width + 1,
+-		.vblank_start = height,
+-		.vsync_start = height + 1,
++		.hblank_start = width / ppc,
++		.hsync_start = width / ppc + 1,
++		.vblank_start = height / ppc,
++		.vsync_start = height / ppc + 1,
+ 	};
+ 	unsigned int htotal;
+ 	unsigned int vtotal;
+ 
+ 	htotal = min_t(unsigned int, XVTC_MAX_HSIZE,
+-		       v4l2_ctrl_g_ctrl(xtpg->hblank) + width);
++		       v4l2_ctrl_g_ctrl(xtpg->hblank) / ppc + width / ppc);
+ 	vtotal = min_t(unsigned int, XVTC_MAX_VSIZE,
+-		       v4l2_ctrl_g_ctrl(xtpg->vblank) + height);
++		       v4l2_ctrl_g_ctrl(xtpg->vblank) / ppc + height / ppc);
+ 
+ 	config.hsync_end = htotal - 1;
+ 	config.hsize = htotal;
+@@ -683,6 +685,17 @@ static const struct v4l2_ctrl_config xtpg_hls_fg_ctrl = {
+ 	.qmenu	= xtpg_hls_fg_strings,
+ };
+ 
++static const struct v4l2_ctrl_config xtpg_ppc_ctrl = {
++	.ops    = &xtpg_ctrl_ops,
++	.id     = V4L2_CID_XILINX_PPC,
++	.name   = "Pixels per clock",
++	.type   = V4L2_CTRL_TYPE_INTEGER,
++	.min    = 1,
++	.max    = 2,
++	.step   = 1,
++	.def    = 1,
++};
++
+ static struct v4l2_ctrl_config xtpg_common_ctrls[] = {
+ 	{
+ 		.ops    = &xtpg_ctrl_ops,
+@@ -1066,6 +1079,8 @@ static int xtpg_probe(struct platform_device *pdev)
+ 	xtpg->hblank = v4l2_ctrl_new_std(&xtpg->ctrl_handler, &xtpg_ctrl_ops,
+ 					 V4L2_CID_HBLANK, XTPG_MIN_HBLANK,
+ 					 XTPG_MAX_HBLANK, 1, 100);
++	xtpg->ppc = v4l2_ctrl_new_custom(&xtpg->ctrl_handler, &xtpg_ppc_ctrl,
++					 NULL);
+ 
+ 	if (xtpg->is_hls) {
+ 		xtpg->pattern =
+diff --git a/include/uapi/linux/xilinx-v4l2-controls.h b/include/uapi/linux/xilinx-v4l2-controls.h
+index 9f2d155..be59a42 100644
+--- a/include/uapi/linux/xilinx-v4l2-controls.h
++++ b/include/uapi/linux/xilinx-v4l2-controls.h
+@@ -72,6 +72,8 @@
+ #define V4L2_CID_XILINX_TPG_NOISE_GAIN		(V4L2_CID_XILINX_TPG + 17)
+ /* Foreground pattern (HLS)*/
+ #define V4L2_CID_XILINX_TPG_HLS_FG_PATTERN     (V4L2_CID_XILINX_TPG + 18)
++/*Pixels per clock control*/
++#define V4L2_CID_XILINX_PPC			(V4L2_CID_XILINX_TPG + 19)
+ 
+ /*
+  * Xilinx CRESAMPLE Video IP
+-- 
+2.7.4
+

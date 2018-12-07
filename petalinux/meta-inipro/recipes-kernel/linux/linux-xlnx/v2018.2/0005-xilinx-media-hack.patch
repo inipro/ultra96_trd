@@ -1,0 +1,80 @@
+diff --git a/drivers/media/platform/xilinx/xilinx-dma.c b/drivers/media/platform/xilinx/xilinx-dma.c
+index 2f173f1..af9fa0d 100644
+--- a/drivers/media/platform/xilinx/xilinx-dma.c
++++ b/drivers/media/platform/xilinx/xilinx-dma.c
+@@ -170,12 +170,18 @@ static int xvip_pipeline_start_stop(struct xvip_composite_device *xdev,
+ 		 * shared between sub-graphs
+ 		 */
+ 		if (start != is_streaming) {
+-			ret = v4l2_subdev_call(subdev, video, s_stream,
+-					       start);
+-			if (start && ret < 0 && ret != -ENOIOCTLCMD) {
+-				dev_err(xdev->dev, "s_stream is failed on subdev\n");
+-				xvip_subdev_set_streaming(xdev, subdev, !start);
+-				return ret;
++			if (start) {
++				ret = v4l2_subdev_call(subdev, core, s_power, 1);
++				ret = v4l2_subdev_call(subdev, video, s_stream,
++										start);
++				if (start && ret < 0 && ret != -ENOIOCTLCMD) {
++					dev_err(xdev->dev, "s_stream is failed on subdev\n");
++					xvip_subdev_set_streaming(xdev, subdev, !start);
++					return ret;
++				}
++			} else {
++				ret = v4l2_subdev_call(subdev, video, s_stream, start);
++				ret = v4l2_subdev_call(subdev, core, s_power, 0);
+ 			}
+ 		}
+ 	}
+diff --git a/drivers/media/platform/xilinx/xilinx-vipp.c b/drivers/media/platform/xilinx/xilinx-vipp.c
+index 6a1f424..b69a050 100644
+--- a/drivers/media/platform/xilinx/xilinx-vipp.c
++++ b/drivers/media/platform/xilinx/xilinx-vipp.c
+@@ -87,20 +87,16 @@ static int xvip_graph_build_one(struct xvip_composite_device *xdev,
+ 	struct xvip_graph_entity *ent;
+ 	struct v4l2_fwnode_link link;
+ 	struct device_node *ep = NULL;
+-	struct device_node *next;
+ 	int ret = 0;
+ 
+ 	dev_dbg(xdev->dev, "creating links for entity %s\n", local->name);
+ 
+ 	while (1) {
+ 		/* Get the next endpoint and parse its link. */
+-		next = of_graph_get_next_endpoint(entity->node, ep);
+-		if (next == NULL)
++		ep = of_graph_get_next_endpoint(entity->node, ep);
++		if (ep == NULL)
+ 			break;
+ 
+-		of_node_put(ep);
+-		ep = next;
+-
+ 		dev_dbg(xdev->dev, "processing endpoint %pOF\n", ep);
+ 
+ 		ret = v4l2_fwnode_parse_link(of_fwnode_handle(ep), &link);
+@@ -240,7 +236,6 @@ static int xvip_graph_build_dma(struct xvip_composite_device *xdev)
+ 	struct xvip_graph_entity *ent;
+ 	struct v4l2_fwnode_link link;
+ 	struct device_node *ep = NULL;
+-	struct device_node *next;
+ 	struct xvip_dma *dma;
+ 	int ret = 0;
+ 
+@@ -248,13 +243,10 @@ static int xvip_graph_build_dma(struct xvip_composite_device *xdev)
+ 
+ 	while (1) {
+ 		/* Get the next endpoint and parse its link. */
+-		next = of_graph_get_next_endpoint(node, ep);
+-		if (next == NULL)
++		ep = of_graph_get_next_endpoint(node, ep);
++		if (ep == NULL)
+ 			break;
+ 
+-		of_node_put(ep);
+-		ep = next;
+-
+ 		dev_dbg(xdev->dev, "processing endpoint %pOF\n", ep);
+ 
+ 		ret = v4l2_fwnode_parse_link(of_fwnode_handle(ep), &link);

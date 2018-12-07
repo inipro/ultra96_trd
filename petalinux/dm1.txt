@@ -98,7 +98,6 @@ $ vi project-spec/meta-user/recipes-core/images/petalinux-user-image.bbappend
 +						packagegroup-petalinux-openamp \
 +						packagegroup-petalinux-v4lutils \
 +						packagegroup-petalinux-display-debug \
-+						packagegroup-petalinux-openamp \
 +						packagegroup-petalinux-x11 \
 +                       packagegroup-petalinux-opencv-dev \
 +						packagegroup-petalinux-gstreamer-dev \
