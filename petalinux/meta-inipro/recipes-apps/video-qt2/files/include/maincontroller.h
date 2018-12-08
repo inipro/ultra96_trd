@@ -150,18 +150,6 @@ public slots:
 	void setZoneVDelta(int);
 	void filterCoeff(int,int,int,int,int,int,int,int,int);
 	void errorPopup(int);
-	void csiredgamma(int);
-	void csibluegamma(int);
-	void csigreengamma(int);
-	void csicontrast(int);
-	void csibrightness(int);
-	void csiredgain(int);
-	void csigreengain(int);
-	void csibluegain(int);
-	void csiexposure(int);
-	void csiimxgain(int);
-	void setTestPattern(int);
-	void setVerticalFlip(int);
 	void updatecpu(QAbstractSeries *cpu1, QAbstractSeries *cpu2, QAbstractSeries *cpu3, QAbstractSeries *cpu4);
 	void updateThroughput(QAbstractSeries *videoSrc, QAbstractSeries *accelerator, QAbstractSeries *displayPort);
 	void fileSelect(QString,int);

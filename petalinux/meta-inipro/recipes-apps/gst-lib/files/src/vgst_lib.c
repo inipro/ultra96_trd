@@ -107,12 +107,6 @@ vgst_error_to_string (VGST_ERROR_LOG error_code) {
       return "Failed to create overlay, multi-stream pipeline failed";
     case VGST_ERROR_APP_PTR_NULL :
       return "Application pointers are null";
-    case VGST_VLIB_ERROR_HDMIRX_INVALID_STATE :
-      return vlib_error_name(VGST_VLIB_ERROR_HDMIRX_INVALID_STATE);
-    case VGST_VLIB_ERROR_HDMIRX_INVALID_RES :
-      return vlib_error_name(VGST_VLIB_ERROR_HDMIRX_INVALID_RES);
-    case VGST_VLIB_ERROR_HDMIRX_INVALID_FPS :
-      return vlib_error_name(VGST_VLIB_ERROR_HDMIRX_INVALID_FPS);
     case VGST_VLIB_ERROR_SET_FPS :
       return vlib_error_name(VGST_VLIB_ERROR_SET_FPS);
     case VGST_VLIB_ERROR_MIPI_SRC_CONFIG :
@@ -165,7 +159,7 @@ vgst_config_options (vgst_enc_params *enc_param, vgst_ip_params *ip_param, vgst_
         GST_ERROR ("Split screen is not supported on DP");
         return VGST_ERROR_SPLIT_SCREEN_FAIL;
       }
-      if (DP != cmn_param->driver_type && HDMI_Tx != cmn_param->driver_type) {
+      if (DP != cmn_param->driver_type) {
         GST_ERROR ("driver type is invalid");
         return VGST_ERROR_DRIVER_TYPE_MISMATCH;
       }
@@ -173,7 +167,7 @@ vgst_config_options (vgst_enc_params *enc_param, vgst_ip_params *ip_param, vgst_
         GST_ERROR ("Resolution WxH not supported");
         return VGST_ERROR_RESOLUTION_NOT_SUPPORTED;
       }
-      if ((ip_param[i].filter_type != SDX_FILTER) && (!g_strcmp0 (ip_param[i].src, V4L2_SRC_NAME) && (ip_param[i].device_type != TPG && ip_param[i].device_type != HDMI && ip_param[i].device_type != CSI && ip_param[i].device_type != SDI))) {
+      if ((ip_param[i].filter_type != SDX_FILTER) && (!g_strcmp0 (ip_param[i].src, V4L2_SRC_NAME) && (ip_param[i].device_type != TPG && ip_param[i].device_type != CSI ))) {
         GST_ERROR ("device type is invalid");
         return VGST_ERROR_DEVICE_TYPE_INVALID;
       }

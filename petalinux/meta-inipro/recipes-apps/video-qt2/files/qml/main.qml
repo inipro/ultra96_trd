@@ -126,13 +126,6 @@ Rectangle {
 	property var widthCoeffsBox: 50
 	property var tooltipWidth: 0
 
-	property int gammasetingsmaxvalue: 40
-	property int csisetingsmaxvalue: 100
-	property int imxexposuremaxvalue:16666
-	property int  imxexposureminvalue: 14
-	property int imxgainmaxvalue: 46088
-	property int imxgainminvalue: 256
-
 	FontLoader { id: fontFamily; source: "/font/font/luxisr.ttf" }
 
 	property var popupVisible: 0
@@ -199,18 +192,6 @@ Rectangle {
 	signal setZoneHDelta(int H)
 	signal setZoneV(int v)
 	signal setZoneVDelta(int v)
-	signal csiredgamma(int redg)
-	signal csibluegamma(int blueg)
-	signal csigreengamma(int greeng)
-	signal csicontrast(int contrast)
-	signal csibrightness(int brightness)
-	signal csiredgain(int redgain)
-	signal csigreengain(int greengain)
-	signal csibluegain(int bluegain)
-	signal csiexposure(int imxgain)
-	signal csiimxgain(int exposure)
-	signal setTestPattern(int testpattern)
-	signal setVerticalFlip(int flip)
 	signal filterCoeff(int c00,int c01,int c02,int c10,int c11,int c12,int c20 ,int c21,int c22)
 	signal fileSelect(string filename, int flag)
 	Timer {

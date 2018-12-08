@@ -110,8 +110,5 @@ Rectangle{
 		AdvancedDemo{
 			visible: popupVisible == "Demo Mode"
 		}
-		AdvancedCsi{
-			visible: popupVisible == "CSI"
-		}
 	}
 }

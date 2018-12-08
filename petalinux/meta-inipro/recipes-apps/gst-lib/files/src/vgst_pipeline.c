@@ -283,9 +283,7 @@ vgst_set_split_screen_property (vgst_ip_params *ip_param, vgst_enc_params *enc_p
     g_object_set (G_OBJECT (play_ptr->fpsdisplaysink), "signal-fps-measurements", TRUE, NULL);
     g_object_set (G_OBJECT (play_ptr->fpsdisplaysink), "text-overlay",            FALSE, NULL);
     g_object_set (G_OBJECT (play_ptr->fpsdisplaysink), "video-sink",              play_ptr->videosink, NULL);
-    g_object_set (G_OBJECT (play_ptr->videosink),      "bus-id",                  MIXER_BUS_ID, NULL);
     g_object_set (G_OBJECT (play_ptr->videosink),      "plane-id",                *plane_id, NULL);
-    g_object_set (G_OBJECT (play_ptr->videosink),      "driver-name",             HDMI_DRIVER_NAME, NULL);
     g_signal_connect (play_ptr->fpsdisplaysink,        "fps-measurements",        G_CALLBACK (on_fps_measurement), &play_ptr->fps_num[0]);
 
     *plane_id += 1;
@@ -293,9 +291,7 @@ vgst_set_split_screen_property (vgst_ip_params *ip_param, vgst_enc_params *enc_p
     g_object_set (G_OBJECT (play_ptr->fpsdisplaysink2), "signal-fps-measurements", TRUE, NULL);
     g_object_set (G_OBJECT (play_ptr->fpsdisplaysink2), "text-overlay",            FALSE, NULL);
     g_object_set (G_OBJECT (play_ptr->fpsdisplaysink2), "video-sink",              play_ptr->videosink2, NULL);
-    g_object_set (G_OBJECT (play_ptr->videosink2),      "bus-id",                  MIXER_BUS_ID, NULL);
     g_object_set (G_OBJECT (play_ptr->videosink2),      "plane-id",                *plane_id, NULL);
-    g_object_set (G_OBJECT (play_ptr->videosink2),      "driver-name",             HDMI_DRIVER_NAME, NULL);
     g_signal_connect (play_ptr->fpsdisplaysink2,        "fps-measurements",        G_CALLBACK (on_fps_measurement), &play_ptr->fps_num[1]);
     *plane_id += 1;
 }

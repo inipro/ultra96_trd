@@ -99,10 +99,6 @@
         <file>qml/Tooltip.qml</file>
         <file>qml/OptionsScrollVu.qml</file>
         <file>qml/AdvancedDemo.qml</file>
-        <file>qml/AdvancedCsi.qml</file>
-        <file>qml/GammaSet.qml</file>
-        <file>qml/CscSettings.qml</file>
-        <file>qml/ImxControl.qml</file>
         <file>qml/FileDlg.qml</file>
     </qresource>
 </RCC>

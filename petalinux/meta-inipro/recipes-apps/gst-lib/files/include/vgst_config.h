@@ -106,7 +106,6 @@ typedef enum {
 #define FPS_UPDATE_INTERVAL          1000  // 1sec
 #define DP_BUS_ID                    "fd4a0000.zynqmp-display"
 #define DP_DRIVER_NAME               "xlnx"
-#define HDMI_DRIVER_NAME             "xlnx"
 #define DEFAULT_TPG_FPS_NUM          30
 #define DEFAULT_PLANE_ID             29
 

@@ -177,6 +177,8 @@ static int vcap_csi_ops_set_frame_rate(const struct vlib_vdev *vdev,
 		return VLIB_ERROR_FILE_IO;
 	}
 
+	if (numerator > 30) numerator = 30;
+
 	memset(&ival, 0, sizeof(ival));
 	ival.interval.numerator = denominator;
 	ival.interval.denominator = numerator;
@@ -220,6 +222,7 @@ struct vlib_vdev *vcap_csi_init(const struct matchtable *mte, void *media)
 		free(vd);
 		return NULL;
 	}
+
 
 	return vd;
 }

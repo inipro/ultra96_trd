@@ -77,7 +77,6 @@ static struct v_source vsrc_tbl[] = {
 	{VLIB_VCLASS_VIVID, "TPG (SW)", false, NULL},
 	{VLIB_VCLASS_UVC, "USB", false, NULL},
 	{VLIB_VCLASS_TPG, "TPG (PL)", true, NULL},
-//	{VLIB_VCLASS_HDMII, "HDMI", false, NULL},
 	{VLIB_VCLASS_CSI, "CSI", true, NULL},
 	{VLIB_VCLASS_FILE, "FILE", true, NULL},
 };

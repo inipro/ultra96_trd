@@ -46,7 +46,7 @@
 void
 vgst_print_params (vgst_ip_params *ip_param, vgst_enc_params *enc_param, vgst_op_params *op_param, vgst_cmn_params *cmn_param, vgst_sdx_filter_params *filter_param) {
     GST_DEBUG ("Src name %s", ip_param->src);
-    GST_DEBUG ("Device type %d [1 =TPG, 2 =HDMI], 3 = MIPI", ip_param->device_type);
+    GST_DEBUG ("Device type %d [1 =TPG], 2 = MIPI", ip_param->device_type);
     GST_DEBUG ("Format %s", ip_param->format);
     GST_DEBUG ("Uri %s", ip_param->uri);
     GST_DEBUG ("Width %u", ip_param->width);
@@ -275,10 +275,6 @@ vgst_set_property (vgst_ip_params *ip_param, vgst_enc_params *enc_param, vgst_op
           g_object_set (G_OBJECT (play_ptr->videosink), "bus-id",              DP_BUS_ID, NULL);
           //g_object_set (G_OBJECT (play_ptr->videosink), "plane-id",            cmn_param->plane_id, NULL);
           //g_object_set (G_OBJECT (play_ptr->videosink), "driver-name",         DP_DRIVER_NAME, NULL);
-      } else if (cmn_param->driver_type == HDMI_Tx) {
-        g_object_set (G_OBJECT (play_ptr->videosink), "bus-id",                MIXER_BUS_ID, NULL);
-        g_object_set (G_OBJECT (play_ptr->videosink), "plane-id",              cmn_param->plane_id, NULL);
-        g_object_set (G_OBJECT (play_ptr->videosink), "driver-name",           HDMI_DRIVER_NAME, NULL);
       }
       g_object_set (G_OBJECT (play_ptr->fpsdisplaysink), "video-sink",         play_ptr->videosink, NULL);
       g_signal_connect (play_ptr->fpsdisplaysink,        "fps-measurements",   G_CALLBACK (on_fps_measurement), &play_ptr->fps_num[0]);

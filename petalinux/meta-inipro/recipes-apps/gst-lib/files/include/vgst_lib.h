@@ -57,7 +57,6 @@ extern "C"
 	#define vlib_src_uninit()	0
 	#define vlib_src_config(x, y)	0
 	#define vlib_get_devname	vlib_video_src_get_vdev_from_id
-	#define MIXER_BUS_ID		"b00c0000.v_mix"
 	#define V4L2_SRC_NAME           "v4l2src"
 	#define FILE_SRC_NAME		"filesrc"
 	#define MAX_FRAME_RATE_NUMERATOR	60
@@ -69,12 +68,9 @@ extern "C"
 	 */
 	typedef enum {
 	    TPG = 1,
-	    HDMI,
 	    CSI,
-	    SDI,
 	} vlib_video_src_dev_type;
 #else
-	#define MIXER_BUS_ID		"a0070000.v_mix"
 	#define FILE_SRC_NAME		"uridecodebin"
 	#define MAX_FRAME_RATE_NUMERATOR	30
 #endif
@@ -166,7 +162,6 @@ typedef enum {
 
 typedef enum {
     DP,
-    HDMI_Tx,
 } VGST_DRIVER_TYPE;
 
 typedef enum {

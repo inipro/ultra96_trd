@@ -381,11 +381,6 @@ int main(int argc, char *argv[])
 	for(int i = 1; i < TPG_BG_PATTERN_CNT; i++)
 		qstr.append(QString::fromUtf8(tpg_get_pattern_menu_name(i)));
 	viewer.rootContext()->setContextProperty("tpgPatterns",qstr);
-	/* TEST PATTERNS */
-	QStringList testpatternqstr;
-	for(int a = 0; a < IMX274_TEST_PATTERN_CNT; a++)
-		testpatternqstr.append(QString::fromUtf8(imx274_get_test_pattern_name(a)));
-	viewer.rootContext()->setContextProperty("testPatterns",testpatternqstr);
 	QStringList qstrPreset;
 	bool filter2DEnabled = false;
 #if defined (SAMPLE_FILTER2D)
@@ -445,18 +440,6 @@ int main(int argc, char *argv[])
 	QObject :: connect( item, SIGNAL(filterCoeff(int,int,int,int,int,int,int,int,int)),&myClass,SLOT(filterCoeff(int,int,int,int,int,int,int,int,int)));
 	QObject :: connect((QObject*)viewer.engine(), SIGNAL(quit()), qApp, SLOT(quit()) );
 	QObject :: connect( qApp, SIGNAL(aboutToQuit()),&myClass,SLOT(closeall()));
-	QObject :: connect( item, SIGNAL(csiredgamma(int)),&myClass,SLOT(csiredgamma(int)));
-	QObject :: connect( item, SIGNAL(csibluegamma(int)),&myClass,SLOT(csibluegamma(int)));
-	QObject :: connect( item, SIGNAL(csigreengamma(int)),&myClass,SLOT(csigreengamma(int)));
-	QObject :: connect( item, SIGNAL(csibrightness(int)),&myClass,SLOT(csibrightness(int)));
-	QObject :: connect( item, SIGNAL(csicontrast(int)),&myClass,SLOT(csicontrast(int)));
-	QObject :: connect( item, SIGNAL(csiredgain(int)),&myClass,SLOT(csiredgain(int)));
-	QObject :: connect( item, SIGNAL(csigreengain(int)),&myClass,SLOT(csigreengain(int)));
-	QObject :: connect( item, SIGNAL(csibluegain(int)),&myClass,SLOT(csibluegain(int)));
-	QObject :: connect( item, SIGNAL(csiexposure(int)),&myClass,SLOT(csiexposure(int)));
-	QObject :: connect( item, SIGNAL(csiimxgain(int)),&myClass,SLOT(csiimxgain(int)));
-	QObject :: connect( item, SIGNAL(setTestPattern(int)),&myClass,SLOT(setTestPattern(int)));
-	QObject :: connect( item, SIGNAL(setVerticalFlip(int)),&myClass,SLOT(setVerticalFlip(int)));
 	QObject :: connect( item, SIGNAL(fileSelect(QString,int)),&myClass,SLOT(fileSelect(QString,int)));
 	viewer.show();
 

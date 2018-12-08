@@ -269,67 +269,6 @@ void maincontroller:: setZoneVDelta(int v){
 
 	tpg_set_zplate_hor_cntl_delta(vd, v);
 }
-//CSI Settings
-void maincontroller::csiredgamma(int redg){
-	const struct vlib_vdev *vd = vsrc_get_vd(VLIB_VCLASS_CSI);
-
-	gamma_set_red_correction(vd, redg);
-}
-void maincontroller::csibluegamma(int blueg){
-	const struct vlib_vdev *vd = vsrc_get_vd(VLIB_VCLASS_CSI);
-
-	gamma_set_blue_correction(vd, blueg);
-}
-void maincontroller::csigreengamma(int greeng){
-	const struct vlib_vdev *vd = vsrc_get_vd(VLIB_VCLASS_CSI);
-
-	gamma_set_green_correction(vd, greeng);
-}
-void maincontroller::csicontrast(int contrast){
-	const struct vlib_vdev *vd = vsrc_get_vd(VLIB_VCLASS_CSI);
-
-	csc_set_contrast(vd, contrast);
-}
-void maincontroller::csibrightness(int brightness){
-	const struct vlib_vdev *vd = vsrc_get_vd(VLIB_VCLASS_CSI);
-
-	csc_set_brightness(vd, brightness);
-}
-void maincontroller::csiredgain(int redgain){
-	const struct vlib_vdev *vd = vsrc_get_vd(VLIB_VCLASS_CSI);
-
-	csc_set_red_gain(vd, redgain);
-}
-void maincontroller::csigreengain(int greengain){
-	const struct vlib_vdev *vd = vsrc_get_vd(VLIB_VCLASS_CSI);
-
-	csc_set_green_gain(vd, greengain);
-}
-void maincontroller::csibluegain(int bluegain){
-	const struct vlib_vdev *vd = vsrc_get_vd(VLIB_VCLASS_CSI);
-
-	csc_set_blue_gain(vd, bluegain);
-}
-void maincontroller::csiexposure(int exposure){
-	const struct vlib_vdev *vd = vsrc_get_vd(VLIB_VCLASS_CSI);
-
-	imx274_set_exposure(vd, exposure);
-}
-void maincontroller::csiimxgain(int imxgain){
-	const struct vlib_vdev *vd = vsrc_get_vd(VLIB_VCLASS_CSI);
-
-	imx274_set_gain(vd, imxgain);
-}
-void maincontroller:: setTestPattern(int testpattern){
-	const struct vlib_vdev *vd = vsrc_get_vd(VLIB_VCLASS_CSI);
-
-	imx274_set_test_pattern(vd, testpattern);
-}
-void maincontroller:: setVerticalFlip(int flip){
-	const struct vlib_vdev *vd = vsrc_get_vd(VLIB_VCLASS_CSI);
-
-	imx274_set_vertical_flip(vd, flip);
-}
 void maincontroller:: fileSelect(QString filename,int isPlaying){
 	setVideo(0);
 	vlib_store_fname_src(g_strdup(filename.toLatin1().data()));
