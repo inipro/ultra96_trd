@@ -50,7 +50,7 @@
 #include <v4l2_helper.h>
 #include <vcap_tpg_int.h>
 
-#define MEDIA_TPG_ENTITY "b0010000.v_tpg"
+#define MEDIA_TPG_ENTITY "b0020000.v_tpg"
 #define MEDIA_TPG_FMT_IN "UYVY"
 
 #define TPG_BG_PATTERN_DEFAULT 14

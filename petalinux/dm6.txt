@@ -1,22 +1,20 @@
 $ cd ultra96_trd
 $ petalinux-config --get-hw-description=../../dm6/dm6.sdk
-$ vi project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
-/include/ "system-conf.dtsi"
+$ petalinux-config -c kernel
+Device Drivers -> Multimedia support 
+[ ] Autoselect ancillary drivers (tuners, sensors, i2c, spi, frontends) => CONFIG_MEDIA_SUBDRV_AUTOSELECT=n
+Device Drivers -> Multimedia support -> I2C Encoders, decoders, sensors and other helper chips
+<*> OmniVision OV5640 sensor support ===> CONFIG_VIDEO_OV5640=y
+Device Drivers -> I2C support 
+<*> I2C bus multiplexing support ===> CONFIG_I2C_MUX=y
+Device Drivers -> I2C support -> Multiplexer I2C Chip support
+<*> NXP PCA9541 I2C Master Selector ===> CONFIG_I2C_MUX_PCA9541=y
+<*> Philips PCA954x I2C Mux/switches  ===> CONFIG_I2C_MUX_PCA954x=y
+
+
+$ vi project-spec/meta-user/recipes-bsp/device-tree/files/vcap-tpg.dtsi
 +#include <dt-bindings/gpio/gpio.h>
 +#include <dt-bindings/media/xilinx-vip.h>
-/ {
-   aliases {
-       /delete-property/ serial2;
-   };
-};
-/delete-node/ &axi_uartlite_0;
-/include/ "rpu1.dtsi"
-+
-+/*
-+&axi_intc_0 {
-+    xlnx,kind-of-intr = <0x1>;
-+};
-+*/
 +
 +&tpg_input_0_v_tc_0 {
 +    clocks = <&tpg_pixel_clk>;
@@ -52,10 +50,6 @@ $ vi project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
 +    xlnx,dma-addr-width = <32>;
 +};
 +
-+&fclk0 {
-+    status = "okay";
-+};
-+
 +&amba {
 +    tpg_pixel_clk: tpg_pixel_clk {
 +        compatible = "fixed-clock";
@@ -63,13 +57,6 @@ $ vi project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
 +        clock-frequency = <300000000>;
 +    };
 +
-+    axi_stream_clk: axi_stream_clk {
-+        compatible = "fixed-factor-clock";
-+        clocks = <&clk 71>;
-+        #clock-cells = <0>;
-+        clock-div = <1>;
-+        clock-mult = <6>;
-+    };
 +
 +    vcap_tpg {
 +        compatible = "xlnx,video";
@@ -90,6 +77,161 @@ $ vi project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
 +        };
 +    };
 +};
+
+$ vi project-spec/meta-user/recipes-bsp/device-tree/files/vcap-csi.dtsi
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/media/xilinx-vip.h>
++
++/ {
++    pcam_clk: pcam_clk {
++        #clock-cells = <0>;
++        compatible = "fixed-clock";
++        clock-frequency = <12000000>;
++    };
++    DOVDD: fixed_regulator_DOVDD@0 {
++        compatible = "regulator-fixed";
++        regulator-name = "DOVDD_reg";
++        regulator-min-microvolt = <1800000>;
++        regulator-max-microvolt = <1800000>;
++        gpio = <&gpio 37 GPIO_ACTIVE_HIGH>;
++        startup-delay-us = <50000>;
++        enable-active-high;
++    };
++    AVDD: fixed_regulator_AVDD@1 {
++        compatible = "regulator-fixed";
++        regulator-name = "AVDD_reg";
++        regulator-min-microvolt = <2800000>;
++        regulator-max-microvolt = <2800000>;
++    };
++    DVDD: fixed_regulator_DVDD@2 {
++        compatible = "regulator-fixed";
++        regulator-name = "DVDD_reg";
++        regulator-min-microvolt = <1500000>;
++        regulator-max-microvolt = <1500000>;
++    };
++};
++
++&i2csw_2 {
++    ov5640: camera@3c {
++        compatible = "ovti,ov5640";
++        reg = <0x3c>;
++        clocks = <&pcam_clk>;
++        clock-names = "xclk";
++        DOVDD-supply = <&DOVDD>; /* 1.8v */
++        AVDD-supply = <&AVDD>; /* 2.8v */
++        DVDD-supply = <&DVDD>; /* 1.5v */
++
++        //powerdown-gpios = <&gpio 82 GPIO_ACTIVE_HIGH>;
++        //reset-gpios = <&gpio 83 GPIO_ACTIVE_LOW>;
++        port {
++            ov5640_to_mipi_csi2: endpoint {
++                remote-endpoint = <&mipi_csi2_from_ov5640>;
++                clock-lanes = <0>;
++                data-lanes = <1 2>;
++            };
++        };
++    };
++};
++
++&mipi_csi2_rx_0_mipi_csi2_rx_subsyst_0 {
++    compatible = "xlnx,mipi-csi2-rx-subsystem-3.0";
++    clocks = <&axi_stream_clk>;
++    xlnx,max-lanes = <0x2>;
++    xlnx,dphy-present;
++    xlnx,vc = <0x4>;
++    xlnx,csi-pxl-format = "YUV422_8bit";
++    xlnx,vfb;
++    xlnx,ppc = <0x2>;
++    xlnx,axis-tdata-width = <0x20>;
++    reset-gpios = <&gpio 80 GPIO_ACTIVE_LOW>;
++
++    ports {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        port@0 {
++            reg = <0>;
++            xlnx,video-format = <XVIP_VF_YUV_422>;
++            xlnx,video-width = <8>;
++            mipi_csi2_out: endpoint {
++                remote-endpoint = <&vcap_csi_in>;
++            };
++        };
++        port@1 {
++            reg = <1>;
++            xlnx,video-format = <XVIP_VF_YUV_422>;
++            xlnx,video-width = <8>;
++            mipi_csi2_from_ov5640: endpoint {
++                data-lanes = <1 2>;
++                remote-endpoint = <&ov5640_to_mipi_csi2>;
++            };
++        };
++    };
++};
++
++&mipi_csi2_rx_0_v_frmbuf_wr_0 {
++    compatible = "xlnx,axi-frmbuf-wr-v2";
++    #dma-cells = <1>;
++    clocks = <&axi_stream_clk>;
++    clock-names = "axis";
++    reset-gpios = <&gpio 81 GPIO_ACTIVE_LOW>;
++    xlnx,dma-addr-width = <32>;
++    xlnx,vid-formats = "yuyv", "uyvy", "y8";
++    xlnx,pixels-per-clock = <2>;
++};
++
++&amba {
++    vcap_csi {
++        compatible = "xlnx,video";
++        dmas = <&mipi_csi2_rx_0_v_frmbuf_wr_0 0>;
++        dma-names = "port0";
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            port@0 {
++                reg = <0>;
++                direction = "input";
++                vcap_csi_in: endpoint {
++                    remote-endpoint = <&mipi_csi2_out>;
++                };
++            };
++        };
++    };
++};
+
+$ vi project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
+/include/ "system-conf.dtsi"
+/ {
+   aliases {
+       /delete-property/ serial2;
+   };
+};
+/delete-node/ &axi_uartlite_0;
+#include "rpu1.dtsi"
++&fclk0 {
++    status = "okay";
++};
++&amba {
++   axi_stream_clk: axi_stream_clk {
++        compatible = "fixed-factor-clock";
++        clocks = <&clk 71>;
++        #clock-cells = <0>;
++        clock-div = <1>;
++        clock-mult = <6>;
++    };
++};
++#include "vcap-tpg.dtsi"
++#include "vcap-csi.dtsi"
+
+$ vi project-spec/meta-user/recipes-bsp/device-tree/device-tree.bbappend
+FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+
+SRC_URI += "file://system-user.dtsi \
+-            file://rpu1.dtsi "
++            file://rpu1.dtsi \
++            file://vcap-tpg.dtsi \
++            file://vcap-csi.dtsi "
+
 
 $ petalinux-build -c virtual/boot-bin
 $ cd images/linux

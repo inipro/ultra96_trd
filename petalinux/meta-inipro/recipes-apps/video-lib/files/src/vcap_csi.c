@@ -49,202 +49,12 @@
 #include <v4l2_helper.h>
 #include <vcap_csi_int.h>
 
-#define MEDIA_SENSOR_ENTITY	"IMX274"
-#define MEDIA_SENSOR_FMT_OUT	"SRGGB8"
+#define MEDIA_SENSOR_ENTITY	"ov5640 4-003c"
+#define MEDIA_SENSOR_FMT_OUT	"UYVY"
 
-#define MEDIA_CSI_ENTITY	"a0060000.csiss"
+#define MEDIA_CSI_ENTITY	"a0000000.mipi_csi2_rx_subsystem"
 #define MEDIA_CSI_FMT_IN	MEDIA_SENSOR_FMT_OUT
 #define MEDIA_CSI_FMT_OUT	MEDIA_CSI_FMT_IN
-
-#define MEDIA_DMSC_ENTITY	"b0040000.v_demosaic"
-#define MEDIA_DMSC_FMT_IN	MEDIA_CSI_FMT_OUT
-#define MEDIA_DMSC_FMT_OUT	"RBG24"
-
-#define MEDIA_GAMMA_ENTITY	"b0010000.v_gamma"
-#define MEDIA_GAMMA_FMT_IN	MEDIA_DMSC_FMT_OUT
-#define MEDIA_GAMMA_FMT_OUT	MEDIA_GAMMA_FMT_IN
-
-#define MEDIA_CSC_ENTITY	"b0060000.csc"
-#define MEDIA_CSC_FMT_IN	MEDIA_GAMMA_FMT_OUT
-#define MEDIA_CSC_FMT_OUT	MEDIA_CSC_FMT_IN
-
-#define MEDIA_SCALER_ENTITY	"b0080000.scaler"
-#define MEDIA_SCALER_FMT_IN	MEDIA_CSC_FMT_OUT
-
-#define CSI_ACT_LANES	4
-
-static unsigned int act_lanes = CSI_ACT_LANES;
-
-static int v4l2_csi_set_ctrl(const struct vlib_vdev *vd, int id, int value)
-{
-	return v4l2_set_ctrl(vd, MEDIA_CSI_ENTITY, id, value);
-}
-
-static void csi_set_act_lanes(const struct vlib_vdev *vd, unsigned int lanes)
-{
-	v4l2_csi_set_ctrl(vd, V4L2_CID_XILINX_MIPICSISS_ACT_LANES, lanes);
-	act_lanes = lanes;
-}
-
-#define GAMMA_BLUE_COR	10 /* 10 equals passthrough */
-#define GAMMA_GREEN_COR	10 /* 10 equals passthrough */
-#define GAMMA_RED_COR	10 /* 10 equals passthrough */
-
-static unsigned int blue_cor = GAMMA_BLUE_COR;
-static unsigned int green_cor = GAMMA_GREEN_COR;
-static unsigned int red_cor = GAMMA_RED_COR;
-
-static int v4l2_gamma_set_ctrl(const struct vlib_vdev *vd, int id, int value)
-{
-	return v4l2_set_ctrl(vd, MEDIA_GAMMA_ENTITY, id, value);
-}
-
-void gamma_set_blue_correction(const struct vlib_vdev *vd, unsigned int blue)
-{
-	v4l2_gamma_set_ctrl(vd, V4L2_CID_XILINX_GAMMA_CORR_BLUE_GAMMA, blue);
-	blue_cor = blue;
-}
-
-void gamma_set_green_correction(const struct vlib_vdev *vd, unsigned int green)
-{
-	v4l2_gamma_set_ctrl(vd, V4L2_CID_XILINX_GAMMA_CORR_GREEN_GAMMA, green);
-	green_cor = green;
-}
-
-void gamma_set_red_correction(const struct vlib_vdev *vd, unsigned int red)
-{
-	v4l2_gamma_set_ctrl(vd, V4L2_CID_XILINX_GAMMA_CORR_RED_GAMMA, red);
-	red_cor = red;
-}
-
-#define CSC_BRIGHTNESS	50
-#define CSC_CONTRAST	50
-#define CSC_BLUE_GAIN	50
-#define CSC_GREEN_GAIN	50
-#define CSC_RED_GAIN	50
-
-static unsigned int brightness = CSC_BRIGHTNESS;
-static unsigned int contrast = CSC_CONTRAST;
-static unsigned int blue_gain = CSC_BLUE_GAIN;
-static unsigned int green_gain = CSC_GREEN_GAIN;
-static unsigned int red_gain = CSC_RED_GAIN;
-
-static int v4l2_csc_set_ctrl(const struct vlib_vdev *vd, int id, int value)
-{
-	return v4l2_set_ctrl(vd, MEDIA_CSC_ENTITY, id, value);
-}
-
-void csc_set_brightness(const struct vlib_vdev *vd, unsigned int bright)
-{
-	v4l2_csc_set_ctrl(vd, V4L2_CID_XILINX_CSC_BRIGHTNESS, bright);
-	brightness = bright;
-}
-
-void csc_set_contrast(const struct vlib_vdev *vd, unsigned int cont)
-{
-	v4l2_csc_set_ctrl(vd, V4L2_CID_XILINX_CSC_CONTRAST, cont);
-	contrast = cont;
-}
-
-void csc_set_blue_gain(const struct vlib_vdev *vd, unsigned int blue)
-{
-	v4l2_csc_set_ctrl(vd, V4L2_CID_XILINX_CSC_BLUE_GAIN, blue);
-	blue_gain = blue;
-}
-
-void csc_set_green_gain(const struct vlib_vdev *vd, unsigned int green)
-{
-	v4l2_csc_set_ctrl(vd, V4L2_CID_XILINX_CSC_GREEN_GAIN, green);
-	green_gain = green;
-}
-
-void csc_set_red_gain(const struct vlib_vdev *vd, unsigned int red)
-{
-	v4l2_csc_set_ctrl(vd, V4L2_CID_XILINX_CSC_RED_GAIN, red);
-	red_gain = red;
-}
-
-#define IMX274_EXPOSURE		16636
-#define IMX274_GAIN		5120
-#define IMX274_VERTICAL_FLIP	0
-#define IMX274_TEST_PATTERN	0
-
-static unsigned int exposure = IMX274_EXPOSURE;
-static unsigned int gain = IMX274_GAIN;
-static unsigned int vertical_flip = IMX274_VERTICAL_FLIP;
-static unsigned int test_pattern = IMX274_TEST_PATTERN;
-static char *imx274_test_pattern_names[IMX274_TEST_PATTERN_CNT];
-
-static int v4l2_sensor_set_ctrl(const struct vlib_vdev *vd, int id, int value)
-{
-	return v4l2_set_ctrl(vd, MEDIA_SENSOR_ENTITY, id, value);
-}
-
-void imx274_set_exposure(const struct vlib_vdev *vd, unsigned int exp)
-{
-	v4l2_sensor_set_ctrl(vd, V4L2_CID_EXPOSURE, exp);
-	exposure = exp;
-}
-
-void imx274_set_gain(const struct vlib_vdev *vd, unsigned int gn)
-{
-	v4l2_sensor_set_ctrl(vd, V4L2_CID_GAIN, gn);
-	gain = gn;
-}
-
-void imx274_set_vertical_flip(const struct vlib_vdev *vd, unsigned int vflip)
-{
-	v4l2_sensor_set_ctrl(vd, V4L2_CID_VFLIP, vflip);
-	vertical_flip = vflip;
-}
-
-void imx274_set_test_pattern(const struct vlib_vdev *vd, unsigned int tp)
-{
-	v4l2_sensor_set_ctrl(vd, V4L2_CID_TEST_PATTERN, tp);
-	test_pattern = tp;
-}
-
-const char *imx274_get_test_pattern_name(unsigned int idx)
-{
-	ASSERT2(idx < IMX274_TEST_PATTERN_CNT, "Invalid test pattern index\r");
-	return imx274_test_pattern_names[idx];
-}
-
-static void imx274_init_test_pattern_names(const struct vlib_vdev *vdev)
-{
-	struct v4l2_queryctrl query;
-	struct v4l2_querymenu menu;
-	char subdev_name[DEV_NAME_LEN];
-	int ret, fd;
-
-	get_entity_devname(vlib_vdev_get_mdev(vdev), MEDIA_SENSOR_ENTITY,
-			   subdev_name);
-
-	fd = open(subdev_name, O_RDWR);
-	ASSERT2(fd >= 0, "failed to open %s: %s\n", subdev_name, ERRSTR);
-
-	/* query control */
-	memset(&query, 0, sizeof(query));
-	query.id = V4L2_CID_TEST_PATTERN;
-	ret = ioctl(fd, VIDIOC_QUERYCTRL, &query);
-	ASSERT2(ret >= 0, "VIDIOC_QUERYCTRL failed: %s\n", ERRSTR);
-
-	for (size_t i = 0; i < IMX274_TEST_PATTERN_CNT; i++)
-		imx274_test_pattern_names[i] = malloc(32 * sizeof(**imx274_test_pattern_names));
-
-	/* query menu */
-	memset(&menu, 0, sizeof(menu));
-	menu.id = query.id;
-	for (menu.index = query.minimum; menu.index <= (unsigned)query.maximum; menu.index++) {
-		ret = ioctl(fd, VIDIOC_QUERYMENU, &menu);
-		if (ret < 0)
-			continue;
-
-		strncpy(imx274_test_pattern_names[menu.index], (char *)menu.name, 32);
-	}
-
-	close(fd);
-}
 
 static void __attribute__((__unused__)) csi_log_status(const struct vlib_vdev *vdev)
 {
@@ -298,7 +108,6 @@ static void vcap_csi_find_sensor_res(size_t *width, size_t *height)
 {
 	size_t err_720 = sq_err(1280, 720, *width, *height);
 	size_t err_1080 = sq_err(1920, 1080, *width, *height);
-	size_t err_4k = sq_err(3840, 2160, *width, *height);
 
 	size_t err = err_720;
 	*width = 1280;
@@ -307,10 +116,6 @@ static void vcap_csi_find_sensor_res(size_t *width, size_t *height)
 		err = err_1080;
 		*width = 1920;
 		*height = 1080;
-	}
-	if (err_4k < err) {
-		*width = 3840;
-		*height = 2160;
 	}
 }
 
@@ -348,70 +153,6 @@ static int vcap_csi_ops_set_media_ctrl(struct video_pipeline *video_setup,
 	memset(media_formats, 0, sizeof(media_formats));
 	media_set_fmt_str(media_formats, MEDIA_CSI_ENTITY, 0, MEDIA_CSI_FMT_IN,
 			  sensor_width, sensor_height);
-	ret = v4l2_subdev_parse_setup_formats(media, media_formats);
-	ASSERT2(!ret, "Unable to setup formats: %s (%d)\n", strerror(-ret),
-		-ret);
-
-	/* Set Demosaic format */
-	memset(media_formats, 0, sizeof(media_formats));
-	media_set_fmt_str(media_formats, MEDIA_DMSC_ENTITY, 0,
-			  MEDIA_DMSC_FMT_IN,
-			  sensor_width, sensor_height);
-	ret = v4l2_subdev_parse_setup_formats(media, media_formats);
-	ASSERT2(!ret, "Unable to setup formats: %s (%d)\n", strerror(-ret),
-		-ret);
-	memset(media_formats, 0, sizeof(media_formats));
-	media_set_fmt_str(media_formats, MEDIA_DMSC_ENTITY, 1,
-			  MEDIA_DMSC_FMT_OUT,
-			  sensor_width, sensor_height);
-	ret = v4l2_subdev_parse_setup_formats(media, media_formats);
-	ASSERT2(!ret, "Unable to setup formats: %s (%d)\n", strerror(-ret),
-		-ret);
-
-	/* Set Gamma format */
-	memset (media_formats, 0, sizeof (media_formats));
-	media_set_fmt_str(media_formats, MEDIA_GAMMA_ENTITY, 0,
-			  MEDIA_GAMMA_FMT_IN,
-			  sensor_width, sensor_height);
-	ret = v4l2_subdev_parse_setup_formats(media, media_formats);
-	ASSERT2(!ret, "Unable to setup formats: %s (%d)\n", strerror(-ret),
-		-ret);
-	memset (media_formats, 0, sizeof (media_formats));
-	media_set_fmt_str(media_formats, MEDIA_GAMMA_ENTITY, 1,
-			  MEDIA_GAMMA_FMT_OUT,
-			  sensor_width, sensor_height);
-	ret = v4l2_subdev_parse_setup_formats(media, media_formats);
-	ASSERT2(!ret, "Unable to setup formats: %s (%d)\n", strerror(-ret),
-		-ret);
-
-	/* Set CSC format */
-	memset(media_formats, 0, sizeof(media_formats));
-	media_set_fmt_str(media_formats, MEDIA_CSC_ENTITY, 0,
-			  MEDIA_CSC_FMT_IN,
-			  sensor_width, sensor_height);
-	ret = v4l2_subdev_parse_setup_formats(media, media_formats);
-	ASSERT2(!ret, "Unable to setup formats: %s (%d)\n", strerror(-ret),
-		-ret);
-	memset(media_formats, 0, sizeof(media_formats));
-	media_set_fmt_str(media_formats, MEDIA_CSC_ENTITY, 1,
-			  MEDIA_CSC_FMT_OUT,
-			  sensor_width, sensor_height);
-	ret = v4l2_subdev_parse_setup_formats(media, media_formats);
-	ASSERT2(!ret, "Unable to setup formats: %s (%d)\n", strerror(-ret),
-		-ret);
-
-	/* Set Scaler format */
-	memset(media_formats, 0, sizeof(media_formats));
-	media_set_fmt_str(media_formats, MEDIA_SCALER_ENTITY, 0,
-			  MEDIA_SCALER_FMT_IN,
-			  sensor_width, sensor_height);
-	ret = v4l2_subdev_parse_setup_formats(media, media_formats);
-	ASSERT2(!ret, "Unable to setup formats: %s (%d)\n", strerror(-ret),
-		-ret);
-	memset(media_formats, 0, sizeof(media_formats));
-	media_set_fmt_str(media_formats, MEDIA_SCALER_ENTITY, 1,
-			  vlib_fourcc2mbus(video_setup->in_fourcc),
-			  video_setup->w, video_setup->h);
 	ret = v4l2_subdev_parse_setup_formats(media, media_formats);
 	ASSERT2(!ret, "Unable to setup formats: %s (%d)\n", strerror(-ret),
 		-ret);
@@ -479,28 +220,6 @@ struct vlib_vdev *vcap_csi_init(const struct matchtable *mte, void *media)
 		free(vd);
 		return NULL;
 	}
-
-	/* Set active number of lanes */
-	csi_set_act_lanes(vd, act_lanes);
-
-	/* Set gamma correction */
-	gamma_set_blue_correction(vd, blue_cor);
-	gamma_set_green_correction(vd, green_cor);
-	gamma_set_red_correction(vd, red_cor);
-
-	/* Set CSC defaults */
-	csc_set_brightness(vd, brightness);
-	csc_set_contrast(vd, contrast);
-	csc_set_blue_gain(vd, blue_gain);
-	csc_set_green_gain(vd, green_gain);
-	csc_set_red_gain(vd, red_gain);
-
-	/* Set sensor controls */
-	imx274_set_test_pattern(vd, test_pattern);
-	imx274_set_vertical_flip(vd, vertical_flip);
-	imx274_set_exposure(vd, exposure);
-	imx274_set_gain(vd, gain);
-	imx274_init_test_pattern_names(vd);
 
 	return vd;
 }
