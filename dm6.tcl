@@ -18,7 +18,7 @@ source dm6_preset.tcl
 set_property -dict [apply_preset IPINST] [get_bd_cells zynq_ultra_ps_e_0]
 
 create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz_0
-set_property -dict [list CONFIG.PRIM_IN_FREQ {49.999950} CONFIG.CLKOUT2_USED {true} CONFIG.CLKOUT3_USED {true} CONFIG.CLKOUT4_USED {true} CONFIG.CLKOUT5_USED {true} CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {50.000} CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {75.000} CONFIG.CLKOUT3_REQUESTED_OUT_FREQ {150.000} CONFIG.CLKOUT4_REQUESTED_OUT_FREQ {300.000} CONFIG.CLKOUT5_REQUESTED_OUT_FREQ {200.000} CONFIG.USE_RESET {false} CONFIG.CLKIN1_JITTER_PS {200.0} CONFIG.MMCM_DIVCLK_DIVIDE {1} CONFIG.MMCM_CLKFBOUT_MULT_F {24.000} CONFIG.MMCM_CLKIN1_PERIOD {20.000} CONFIG.MMCM_CLKIN2_PERIOD {10.0} CONFIG.MMCM_CLKOUT0_DIVIDE_F {24.000} CONFIG.MMCM_CLKOUT1_DIVIDE {16} CONFIG.MMCM_CLKOUT2_DIVIDE {8} CONFIG.MMCM_CLKOUT3_DIVIDE {4} CONFIG.MMCM_CLKOUT4_DIVIDE {6} CONFIG.NUM_OUT_CLKS {5} CONFIG.CLKOUT1_JITTER {163.696} CONFIG.CLKOUT1_PHASE_ERROR {154.678} CONFIG.CLKOUT2_JITTER {148.365} CONFIG.CLKOUT2_PHASE_ERROR {154.678} CONFIG.CLKOUT3_JITTER {129.922} CONFIG.CLKOUT3_PHASE_ERROR {154.678} CONFIG.CLKOUT4_JITTER {116.496} CONFIG.CLKOUT4_PHASE_ERROR {154.678} CONFIG.CLKOUT5_JITTER {124.134} CONFIG.CLKOUT5_PHASE_ERROR {154.678}] [get_bd_cells clk_wiz_0]
+set_property -dict [list CONFIG.PRIM_IN_FREQ {50.000001} CONFIG.CLKOUT2_USED {true} CONFIG.CLKOUT3_USED {true} CONFIG.CLKOUT4_USED {true} CONFIG.CLKOUT5_USED {true} CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {50.000} CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {75.000} CONFIG.CLKOUT3_REQUESTED_OUT_FREQ {150.000} CONFIG.CLKOUT4_REQUESTED_OUT_FREQ {300.000} CONFIG.CLKOUT5_REQUESTED_OUT_FREQ {200.000} CONFIG.USE_RESET {false} CONFIG.NUM_OUT_CLKS {5}] [get_bd_cells clk_wiz_0]
 
 connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins clk_wiz_0/clk_in1]
 
@@ -36,7 +36,7 @@ apply_bd_automation -rule xilinx.com:bd_rule:clkrst -config {Clk "/clk_wiz_0/clk
 
 create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uartlite:2.0 axi_uartlite_0
 set_property -dict [list CONFIG.C_BAUDRATE {115200}] [get_bd_cells axi_uartlite_0]
-apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/clk_wiz_0/clk_out1 (49 MHz)} Clk_slave {Auto} Clk_xbar {/clk_wiz_0/clk_out1 (49 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_LPD} Slave {/axi_uartlite_0/S_AXI} intc_ip {/axi_interconnect_0} master_apm {0}}  [get_bd_intf_pins axi_uartlite_0/S_AXI]
+apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/clk_wiz_0/clk_out1 (50 MHz)} Clk_slave {Auto} Clk_xbar {/clk_wiz_0/clk_out1 (50 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_LPD} Slave {/axi_uartlite_0/S_AXI} intc_ip {/axi_interconnect_0} master_apm {0}}  [get_bd_intf_pins axi_uartlite_0/S_AXI]
 
 source tpg_input_hier.tcl
 create_tpg_input [current_bd_instance .] tpg_input_0
@@ -44,6 +44,7 @@ create_tpg_input [current_bd_instance .] tpg_input_0
 create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_1
 set_property -dict [list CONFIG.NUM_SI {1} CONFIG.NUM_MI {2} CONFIG.STRATEGY {1}] [get_bd_cells axi_interconnect_1]
 connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM0_FPD] -boundary_type upper [get_bd_intf_pins axi_interconnect_1/S00_AXI]
+
 apply_bd_automation -rule xilinx.com:bd_rule:clkrst -config {Clk "/clk_wiz_0/clk_out1 (50 MHz)" }  [get_bd_pins axi_interconnect_1/ACLK]
 apply_bd_automation -rule xilinx.com:bd_rule:clkrst -config {Clk "/clk_wiz_0/clk_out1 (50 MHz)" }  [get_bd_pins axi_interconnect_1/S00_ACLK]
 
@@ -52,22 +53,21 @@ connect_bd_net [get_bd_pins axi_interconnect_1/M00_ACLK] [get_bd_pins clk_wiz_0/
 connect_bd_net [get_bd_pins axi_interconnect_1/M00_ARESETN] [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
 connect_bd_net [get_bd_pins tpg_input_0/s_axi_aclk] [get_bd_pins clk_wiz_0/clk_out1]
 
-
 create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_2
 set_property -dict [list CONFIG.NUM_MI {3} CONFIG.STRATEGY {1}] [get_bd_cells axi_interconnect_2]
 connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM1_FPD] -boundary_type upper [get_bd_intf_pins axi_interconnect_2/S00_AXI]
 apply_bd_automation -rule xilinx.com:bd_rule:clkrst -config {Clk "/clk_wiz_0/clk_out4 (300 MHz)" }  [get_bd_pins axi_interconnect_2/ACLK]
 apply_bd_automation -rule xilinx.com:bd_rule:clkrst -config {Clk "/clk_wiz_0/clk_out4 (300 MHz)" }  [get_bd_pins axi_interconnect_2/S00_ACLK]
 
-connect_bd_net [get_bd_pins rst_clk_wiz_0_299M/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
+connect_bd_net [get_bd_pins rst_clk_wiz_0_300M/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
 
 connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_2/M00_AXI] [get_bd_intf_pins tpg_input_0/s_axi_ctrl]
 connect_bd_net [get_bd_pins axi_interconnect_2/M00_ACLK] [get_bd_pins clk_wiz_0/clk_out4]
-connect_bd_net [get_bd_pins axi_interconnect_2/M00_ARESETN] [get_bd_pins rst_clk_wiz_0_299M/peripheral_aresetn]
+connect_bd_net [get_bd_pins axi_interconnect_2/M00_ARESETN] [get_bd_pins rst_clk_wiz_0_300M/peripheral_aresetn]
 
 connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_2/M01_AXI] [get_bd_intf_pins tpg_input_0/ctrl]
 connect_bd_net [get_bd_pins axi_interconnect_2/M01_ACLK] [get_bd_pins clk_wiz_0/clk_out4]
-connect_bd_net [get_bd_pins axi_interconnect_2/M01_ARESETN] [get_bd_pins rst_clk_wiz_0_299M/peripheral_aresetn]
+connect_bd_net [get_bd_pins axi_interconnect_2/M01_ARESETN] [get_bd_pins rst_clk_wiz_0_300M/peripheral_aresetn]
 
 connect_bd_net [get_bd_pins tpg_input_0/m_axi_s2mm_aclk] [get_bd_pins clk_wiz_0/clk_out4]
 connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/dp_video_ref_clk] [get_bd_pins tpg_input_0/clk_in]
@@ -81,7 +81,7 @@ apply_bd_automation -rule xilinx.com:bd_rule:clkrst -config {Clk "/clk_wiz_0/clk
 
 connect_bd_intf_net -boundary_type upper [get_bd_intf_pins tpg_input_0/M_AXI_S2MM] [get_bd_intf_pins axi_interconnect_3/S00_AXI]
 connect_bd_net [get_bd_pins axi_interconnect_3/S00_ACLK] [get_bd_pins clk_wiz_0/clk_out4]
-connect_bd_net [get_bd_pins axi_interconnect_3/S00_ARESETN] [get_bd_pins rst_clk_wiz_0_299M/peripheral_aresetn]
+connect_bd_net [get_bd_pins axi_interconnect_3/S00_ARESETN] [get_bd_pins rst_clk_wiz_0_300M/peripheral_aresetn]
 
 source mipi_csi2_rx_hier.tcl
 create_mipi_csi2_rx [current_bd_instance .] mipi_csi2_rx_0
@@ -94,12 +94,12 @@ connect_bd_net [get_bd_pins mipi_csi2_rx_0/axi_resetn] [get_bd_pins proc_sys_res
 
 connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_2/M02_AXI] [get_bd_intf_pins mipi_csi2_rx_0/s_axi_ctrl]
 connect_bd_net [get_bd_pins axi_interconnect_2/M02_ACLK] [get_bd_pins clk_wiz_0/clk_out4]
-connect_bd_net [get_bd_pins axi_interconnect_2/M02_ARESETN] [get_bd_pins rst_clk_wiz_0_299M/peripheral_aresetn]
+connect_bd_net [get_bd_pins axi_interconnect_2/M02_ARESETN] [get_bd_pins rst_clk_wiz_0_300M/peripheral_aresetn]
 connect_bd_net [get_bd_pins mipi_csi2_rx_0/m_axi_s2mm_aclk] [get_bd_pins clk_wiz_0/clk_out4]
 
 connect_bd_intf_net -boundary_type upper [get_bd_intf_pins mipi_csi2_rx_0/M_AXI_S2MM] [get_bd_intf_pins axi_interconnect_3/S01_AXI]
 connect_bd_net [get_bd_pins axi_interconnect_3/S01_ACLK] [get_bd_pins clk_wiz_0/clk_out4]
-connect_bd_net [get_bd_pins axi_interconnect_3/S01_ARESETN] [get_bd_pins rst_clk_wiz_0_299M/peripheral_aresetn]
+connect_bd_net [get_bd_pins axi_interconnect_3/S01_ARESETN] [get_bd_pins rst_clk_wiz_0_300M/peripheral_aresetn]
 
 
 connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins mipi_csi2_rx_0/Din]
@@ -125,9 +125,6 @@ make_bd_intf_pins_external  [get_bd_intf_pins mipi_csi2_rx_0/mipi_phy_if]
 set_property name csi_mipi_phy_if [get_bd_intf_ports mipi_phy_if_0]
 
 assign_bd_address
-
-###
-###
 
 regenerate_bd_layout
 validate_bd_design
