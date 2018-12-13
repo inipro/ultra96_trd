@@ -6,5 +6,6 @@ vivado.jou
 dm1/
 dm6/
 **/.Xil
+**/.pc
 petalinux/ultra96_trd/
 petalinux/sdk/
