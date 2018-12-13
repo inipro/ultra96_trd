@@ -41,7 +41,8 @@ EXTRA_IMAGEDEPENDS_remove = "qemu-helper-native virtual/boot-bin"
 +
 +EXTRA_IMAGE_FEATURES += " package-management"
 +
-+PACKAGE_FEED_URIS = "http://192.168.7.1:5678"
++#PACKAGE_FEED_URIS = "http://192.168.7.1:5678"
++PACKAGE_FEED_URIS = "http://192.168.2.100:5678"
 +
 +hostname_pn-base-files = "ultra96"
 +
@@ -81,6 +82,23 @@ $ vi project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
 };
 +/delete-node/ &axi_uartlite_0;
 
+$ mkdir -p project-spec/meta-user/recipes-utils/ultra96-ap-setup/files
+$ vi project-spec/meta-user/recipes-utils/ultra96-ap-setup/files/wpa_ap.conf
++ctrl_interface=/var/run/wpa_supplicant
++ctrl_interface_group=0
++update_config=1
++
++network={
++        ssid="Ultra96"
++        mode=2
++        key_mgmt=WPA-PSK
++        frequency=2437
++        psk="xxxxxx"
++}
+
+$ vi project-spec/meta-user/recipes-utils/ultra96-ap-setup/ultra96-ap-setup_%.bbappend
++FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+
 $ vi project-spec/meta-user/recipes-core/images/petalinux-user-image.bbappend
 +IMAGE_INSTALL_append = " nano \
 +                       tzdata \
@@ -103,6 +121,7 @@ $ vi project-spec/meta-user/recipes-core/images/petalinux-user-image.bbappend
 +						packagegroup-petalinux-gstreamer-dev \
 +						packagegroup-petalinux-qt-dev \
 +						packagegroup-petalinux-qt-extended-dev \
++						ultra96-ap-setup \
 +                        "
 
 $ petalinux-build
