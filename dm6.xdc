@@ -7,8 +7,8 @@ set_property PACKAGE_PIN B5 [get_ports BT_rtsn]
 
 set_property IOSTANDARD LVCMOS18 [get_ports UART*]
 
-#HD_GPIO_3 on FPGA / Connector pin 9 / UART0_rxd
-set_property PACKAGE_PIN G7 [get_ports UART0_rxd]
-#HD_GPIO_1 on FPGA / Connector pin 5 / UART0_txd
-set_property PACKAGE_PIN F8 [get_ports UART0_txd]
+#HD_GPIO_9 on FPGA / Connector pin 16 / UART0_rxd
+set_property PACKAGE_PIN E6 [get_ports UART0_rxd]
+#HD_GPIO_11 on FPGA / Connector pin 20 / UART0_txd
+set_property PACKAGE_PIN D6 [get_ports UART0_txd]
 

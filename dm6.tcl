@@ -112,6 +112,10 @@ connect_bd_net [get_bd_pins mipi_csi2_rx_0/csirxss_csi_irq] [get_bd_pins xlconca
 connect_bd_net [get_bd_pins mipi_csi2_rx_0/s2mm_introut] [get_bd_pins xlconcat_0/In2]
 connect_bd_net [get_bd_pins xlconcat_0/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0]
 
+create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_1
+set_property -dict [list CONFIG.NUM_PORTS {1}] [get_bd_cells xlconcat_1]
+connect_bd_net [get_bd_pins xlconcat_1/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq1]
+
 make_bd_intf_pins_external  [get_bd_intf_pins axi_uartlite_0/UART]
 set_property name UART0 [get_bd_intf_ports UART_0]
 
