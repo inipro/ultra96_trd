@@ -236,4 +236,5 @@ SRC_URI += "file://system-user.dtsi \
 $ petalinux-build -c virtual/boot-bin
 $ cd images/linux
 $ petalinux-package --force --boot --bif=../../../dm6.bif
-
+$ scp BOOT.BIN image.ub root@192.168.2.1:/media/card
+# reboot

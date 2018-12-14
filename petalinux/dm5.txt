@@ -8,8 +8,14 @@ Device Drivers -> Multimedia support -> Media test drivers
 <*> Virtual Video Test Driver ===> VIDEO_VIVID
 
 $ petalinux-build -c virtual/boot-bin
-$ petalinux-build -s
-$ petalinux-package --sysroot -d ../sdk
+$ petalinux-build -c video-qt2
+$ petalinux-build -c package-index
 
 $ cd images/linux
-$ scp image.ub root@192.168.7.2:/media/card
+$ scp image.ub root@192.168.2.1:/media/card 
+
+$ cd /media/hokim/data/work/tmp2018.2_zynqmp/deploy/rpm
+$ python3 -m http.server 5678
+
+# dnf --refresh install video-qt2
+# reboot

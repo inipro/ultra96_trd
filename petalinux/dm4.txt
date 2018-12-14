@@ -88,16 +88,25 @@ $ scp ../../../../dm1/dm1.sdk/perfapm-server/Debug/perfapm-server.elf root@192.1
 $ scp ../../../../dm1/dm1.sdk/perfapm-client-test/Debug/perfapm-client-test.elf root@192.168.7.2:.
 $ scp image.ub root@192.168.7.2:/media/card
 
+$ cd ../..
+============================================================================
 $ petalinux-build -c trd-files
+$ petalinux-build -c package-index
 $ cd /media/hokim/data/work/tmp2018.2_zynqmp/deploy/rpm
 $ python3 -m http.server 5678
 
 # dnf --refresh install trd-files
+# reboot
 # ./perfapm-client-test.elf
 
-=============================================================================
+=================================OR=========================================
 
 $ petalinux-build -c perfapm-client-test
 $ petalinux-build -c package-index
+$ cd /media/hokim/data/work/tmp2018.2_zynqmp/deploy/rpm
+$ python3 -m http.server 5678
 # dnf --refresh install trd-files perfapm-client-test
+# reboot
 # perfapm-client-test
+
+============================================================================
