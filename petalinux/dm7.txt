@@ -1,0 +1,12 @@
+$ cd ultra96_trd
+$ vi project-spec/meta-user/recipes-core/images/petalinux-user-image.bbappend
+                       packagegroup-petalinux-qt-dev \
+                       packagegroup-petalinux-qt-extended-dev \
+                       ultra96-ap-setup \
+-                       "
++                      gst-sdx \
++                       "
+
+$ petalinux-build
+$ petalinux-build -s
+$ petalinux-package --sysroot -d ../sdk

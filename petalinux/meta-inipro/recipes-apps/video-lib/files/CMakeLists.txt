@@ -12,6 +12,7 @@ option (ENABLE_VCAP_FILE "Enable file source" ON)
 add_library (${PROJECT_NAME} STATIC
 	src/drm_helper.c
 	src/filter.c
+	src/filter_gst.c
 	src/log_events.c
 	src/m2m_sw_pipeline.c
 	src/mediactl_helper.c
