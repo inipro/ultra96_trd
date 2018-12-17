@@ -26,9 +26,20 @@
  * in advertising or otherwise to promote the sale, use or other dealings in
  * this Software without prior written authorization from Xilinx.
  */
-
+#ifndef __SDSOC__
+#undef __ARM_NEON__
+#undef __ARM_NEON
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
+#define __ARM_NEON__
+#define __ARM_NEON
+#else
+#include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
+#endif
+
+using namespace cv;
+
 #include <linux/videodev2.h>
 #include <filter2d_sds.h>
 

@@ -16,4 +16,3 @@ alias mv='mv -i'
 
 export PATH=$HOME/bin:$PATH
 export LD_LIBRARY_PATH=$HOME/lib:$LD_LIBRARY_PATH
-export GST_PLUGIN_PATH=$HOME/gstreamer-1.0:$GST_PLUGIN_PATH

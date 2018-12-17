@@ -1,0 +1,21 @@
+$ cd ultra96_trd
+$ petalinux-config -c kernel
+Device Drivers -> Staging drivers
+<*> Xilinx APF Accelerator driver ===> XILINX_APF=y
+
+Device Drivers -> Staging drivers -> Xilinx APF Accelerator driver
+[*] Xilinx APF DMA engines support ===> XILINX_DMA_APF=y
+
+$ vi project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
+/include/ "system-conf.dtsi"
+/ {
+   aliases {
+       /delete-property/ serial2;
+   };
++  xlnk {
++	   compatible = "xlnx,xlnk-1.0";
++  };
+};
+/delete-node/ &axi_uartlite_0;
+
+$ petalinux-build -c virtual/boot-bin

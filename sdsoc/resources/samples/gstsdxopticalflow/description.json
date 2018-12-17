@@ -1,0 +1,51 @@
+{
+	"example" : "GStreamer Optical Flow Plugin",
+	"overview" : "Dense Non-Pyramidal Optical Flow GStreamer Plugin",
+	"board" : [
+		"ultra96_trd"
+	],
+	"os" : [
+		"Linux"
+	],
+	"type" : "library",
+	"system" : {
+		"dmclkid" : "1"
+	},
+	"accelerators" : [
+		{
+			"name" : "read_optflow_input",
+			"location" : "optical_flow_sds.cpp",
+			"clkid" : "0"
+		},
+		{
+			"name" : "DenseNonPyrLKOpticalFlow",
+			"location" : "<PLATFORM>/sw/a53_linux/a53_linux/inc/xfopencv/imgproc/xf_dense_npyr_optical_flow.hpp",
+			"clkid" : "0"
+		},
+		{
+			"name" : "write_optflow_output",
+			"location" : "optical_flow_sds.cpp",
+			"clkid" : "0"
+		}
+	],
+	"exclude" : [
+		"CMakeLists.txt"
+	],
+	"compiler" : {
+		"symbols" : [
+			"OF_PIX_PER_CLOCK=2",
+			"OF_DM=1"
+		],
+		"options" : "-I${SYSROOT}/usr/include/glib-2.0 -I${SYSROOT}/usr/lib/glib-2.0/include -I${SYSROOT}/usr/include/gstreamer-1.0 -Wno-overloaded-virtual -Wno-unused-label -Wno-strict-overflow -Wno-uninitialized -Wno-unused-function -Wno-unused-variable -Wno-unknown-attributes -Wno-unused-local-typedefs -Wno-sign-compare -Wno-mismatched-tags -Wno-int-in-bool-context -hls-target 1"
+	},
+	"linker" : {
+		"libraries" : [
+			"gstbase-1.0",
+			"gstvideo-1.0",
+			"gstallocators-1.0",
+			"gstsdxbase-1.0",
+			"gstsdxallocator-1.0"
+		],
+		"options" : "--sysroot=${SYSROOT} -L=/lib -L=/usr/lib -Wl,-rpath-link=${SYSROOT}/lib,-rpath-link=${SYSROOT}/usr/lib"
+	}
+}

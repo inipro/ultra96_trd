@@ -9,3 +9,15 @@ dm6/
 **/.pc
 petalinux/ultra96_trd/
 petalinux/sdk/
+ultra96_trd.dsa
+sdsoc/output/
+sdsoc/sdx_pid*.str
+sdsoc/Packages/
+sdsoc/workspace
+sdsoc/resources/a53_linux/boot/bl31.elf
+sdsoc/resources/a53_linux/boot/fsbl.elf
+sdsoc/resources/a53_linux/boot/pmufw.elf
+sdsoc/resources/a53_linux/boot/u-boot.elf
+sdsoc/resources/a53_linux/image/image.ub
+sdsoc/resources/prebuilt/bitstream.bit
+sdsoc/resources/prebuilt/ultra96_trd.hdf

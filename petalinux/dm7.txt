@@ -4,7 +4,7 @@ $ vi project-spec/meta-user/recipes-core/images/petalinux-user-image.bbappend
                        packagegroup-petalinux-qt-extended-dev \
                        ultra96-ap-setup \
 -                       "
-+                      gst-sdx \
++                      gst-sdx-dev \
 +                       "
 
 $ petalinux-build
