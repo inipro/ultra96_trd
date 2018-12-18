@@ -71,7 +71,7 @@ $ vi project-spec/meta-user/recipes-bsp/u-boot/files/platform-top.h
 
 $ petalinux-config -c kernel
 
-$ petalinux-build -c device-tree
+$ petalinux-build -c device-tree -x configure
 
 $ vi project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
 /include/ "system-conf.dtsi"
