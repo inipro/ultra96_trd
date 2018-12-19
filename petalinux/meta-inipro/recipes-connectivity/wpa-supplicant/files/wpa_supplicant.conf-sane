@@ -7,3 +7,9 @@ network={
 	key_mgmt=WPA-PSK
 	psk="0gd99fh792"
 }
+network={
+    ssid="inipro"
+    key_mgmt=WPA-PSK
+    psk="20471047"
+}
+
