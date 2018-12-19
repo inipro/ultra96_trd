@@ -93,7 +93,7 @@ $ vi project-spec/meta-user/recipes-utils/ultra96-ap-setup/files/wpa_ap.conf
 +        mode=2
 +        key_mgmt=WPA-PSK
 +        frequency=2437
-+        psk="xxxxxx"
++        psk="xxxxxxxx"
 +}
 
 $ vi project-spec/meta-user/recipes-utils/ultra96-ap-setup/ultra96-ap-setup_%.bbappend
