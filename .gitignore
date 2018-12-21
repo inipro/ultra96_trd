@@ -8,12 +8,14 @@ dm6/
 **/.Xil
 **/.pc
 petalinux/ultra96_trd/
-petalinux/sdk/
 ultra96_trd.dsa
+workspaces/ws_f2dof/build/
+workspaces/ws_f2dof/lib/
+sdsoc/sysroot/
 sdsoc/output/
 sdsoc/sdx_pid*.str
 sdsoc/Packages/
-sdsoc/workspace
+sdsoc/workspace/
 sdsoc/resources/a53_linux/boot/bl31.elf
 sdsoc/resources/a53_linux/boot/fsbl.elf
 sdsoc/resources/a53_linux/boot/pmufw.elf
