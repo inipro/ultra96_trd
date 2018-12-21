@@ -8,5 +8,5 @@ $ vi project-spec/meta-user/recipes-core/images/petalinux-user-image.bbappend
 +                       "
 
 $ petalinux-build
-$ petalinux-build -s
-$ petalinux-package --sysroot -d ../sdk
+$ petalinux-build -c package-index
+# dnf --rehash install gst-sdx-dev

@@ -39,8 +39,8 @@
  *
  *******************************************************************************/
 
-#ifndef _OPTICAL_FLOW_SDS_H_
-#define _OPTICAL_FLOW_SDS_H_
+#ifndef _FILTER2D_SDS_H_
+#define _FILTER2D_SDS_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,18 +49,20 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 
-#define OF_HEIGHT	1080
-#define OF_WIDTH	1920
+/* Kernel size */
+#define KSIZE 3
 
-int optical_flow_init_sds(size_t in_height, size_t in_width, size_t out_height,
-			  size_t out_width, uint32_t in_fourcc,
-			  uint32_t out_fourcc, void **priv);
+/* 2D array of coefficients */
+typedef short int coeff_t[KSIZE][KSIZE];
 
-void optical_flow_sds(unsigned short *frame_prev, unsigned short *frame_curr,
-		      unsigned short *frame_out, int height, int width,
-		      void *priv);
+int filter2d_init_sds(size_t in_height, size_t in_width, size_t out_height,
+		      size_t out_width, uint32_t in_fourcc,
+		      uint32_t out_fourcc, void **priv);
 
-void optical_flow_deinit_sds(void *priv);
+void filter2d_sds(unsigned short *frm_data_in, unsigned short *frm_data_out,
+		  int height, int width, const coeff_t coeff, void *priv);
+
+void filter2d_deinit_sds(void *priv);
 
 #ifdef __cplusplus
 }
