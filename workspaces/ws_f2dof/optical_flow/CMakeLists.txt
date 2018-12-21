@@ -14,5 +14,3 @@ target_link_libraries(${PROJECT_NAME}
 	gstsdxallocator-1.0
 	filter2d_optflow
 )
-
-install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION /usr/lib/gstreamer-1.0)

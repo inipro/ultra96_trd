@@ -1,0 +1,8 @@
+$ mkdir ws_f2dof
+$ cp <somewhere>/libfilter2d_optflow.so ws_f2dof
+$ cd ws_f2dof
+$ mkdir build
+$ cd build
+$ export SYSROOT=<somewhere>
+$ cmake -DCMAKE_TOOLCHAIN_FILE=../aarch64.cmake ..
+$ make

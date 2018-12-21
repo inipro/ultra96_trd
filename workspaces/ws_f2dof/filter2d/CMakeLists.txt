@@ -15,5 +15,3 @@ target_link_libraries(${PROJECT_NAME}
 	filter2d_optflow
 	${OpenCV_LIBRARIES}
 )
-
-install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION /usr/lib/gstreamer-1.0)
