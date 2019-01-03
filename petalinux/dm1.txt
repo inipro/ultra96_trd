@@ -49,6 +49,10 @@ EXTRA_IMAGEDEPENDS_remove = "qemu-helper-native virtual/boot-bin"
 +IMAGE_ROOTFS_EXTRA_SPACE = "102400"
 +
 +SIGGEN_UNLOCKED_RECIPES += "tzdata"
++
++SSTATE_MIRRORS_append = "  \
++file://.* file:///media/hokim/data/sstate-rel-v2018.2-2/aarch64/PATH \n \
++"
 
 $ vi project-spec/meta-user/recipes-bsp/u-boot/files/platform-top.h
 #include <configs/platform-auto.h>
