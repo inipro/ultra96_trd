@@ -1,0 +1,1 @@
+deltask do_package_write_rpm_setscene

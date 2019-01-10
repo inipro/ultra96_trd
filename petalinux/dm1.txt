@@ -52,7 +52,10 @@ EXTRA_IMAGEDEPENDS_remove = "qemu-helper-native virtual/boot-bin"
 +
 +SSTATE_MIRRORS_append = "  \
 +file://.* file:///media/hokim/data/sstate-rel-v2018.2-2/aarch64/PATH \n \
++file://.* file:///media/hokim/data/sstate-rel-v2018.2-3/aarch64/PATH \n \
 +"
++PREFERRED_VERSION_opencv = "3.1"
++LICENSE_FLAGS_WHITELIST_append = " commercial"
 
 $ vi project-spec/meta-user/recipes-bsp/u-boot/files/platform-top.h
 #include <configs/platform-auto.h>
@@ -126,6 +129,7 @@ $ vi project-spec/meta-user/recipes-core/images/petalinux-user-image.bbappend
 +						packagegroup-petalinux-qt-dev \
 +						packagegroup-petalinux-qt-extended-dev \
 +						ultra96-ap-setup \
++						gstreamer1.0-libav \
 +                        "
 
 $ petalinux-build
