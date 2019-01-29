@@ -10,6 +10,6 @@ network={
 network={
     ssid="inipro"
     key_mgmt=WPA-PSK
-    psk="20471047"
+    psk="69569010"
 }
 
